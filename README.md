@@ -3,7 +3,7 @@
 buka folder demand di vs-code
 
 *Langkah 2*
-buka terminal di vs-code ketik "flutter pub get"
+buka terminal di vs-code ketik "flutter pub get" lalu enter
 
 *Langkah 3* 
 setelah langkah 2, lanjut ketik "flutter pub run flutter_launcher_icon"
