@@ -1,0 +1,13 @@
+lib/
+│
+├── app/
+│   ├── data/
+│   ├── modules/
+│   |    └── home/
+│   |        ├── bindings/
+│   |        ├── controller/
+│   |        └── view/
+│   ├── routes/
+│   └── widgets/
+│
+└── main.dart

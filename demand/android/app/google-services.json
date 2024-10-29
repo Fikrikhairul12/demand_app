@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "202465840134",
+    "project_id": "demand-ff258",
+    "storage_bucket": "demand-ff258.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:202465840134:android:efe4b9f0a5362d8d0f0787",
+        "android_client_info": {
+          "package_name": "demand.id.demand"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDxSSUfzUfwCIv5iZ9xusMB-X6DeRf4gig"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
