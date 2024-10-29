@@ -2,7 +2,7 @@
 *Langkah 1*
 buka folder demand di vs-code
 
-*langkah 2*
+*Langkah 2*
 buka terminal di vs-code ketik "flutter pub get"
 
 *Langkah 3* 
