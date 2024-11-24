@@ -2,6 +2,8 @@ lib/
 │
 ├── app/
 │   ├── data/
+│   |    ├── models/
+|   |    └── services/
 │   ├── modules/
 │   |    └── home/
 │   |        ├── bindings/
@@ -11,3 +13,10 @@ lib/
 │   └── widgets/
 │
 └── main.dart
+
+
+Authentication (email dan mungkin OTP).
+Cloud Firestore.
+Firebase Storage.
+Cloud Messaging untuk notifikasi.
+Analytics untuk pelacakan performa aplikasi.
