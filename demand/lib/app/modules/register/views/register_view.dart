@@ -68,37 +68,38 @@ class RegisterView extends GetView<RegisterController> {
                 width: 293,
                 height: 60,
                 child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      backgroundColor: Color(0xff0098ff),
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
                     ),
-                    onPressed: () async {
-                      String email = emailController.text;
-                      String password = passwordController.text;
-                      String confirmPassword = confirmPasswordController.text;
+                    backgroundColor: Color(0xff0098ff),
+                  ),
+                  onPressed: () async {
+                    String email = emailController.text;
+                    String password = passwordController.text;
+                    String confirmPassword = confirmPasswordController.text;
 
-                      if (password == confirmPassword) {
-                        await controller.registerUser(email, password);
-                      } else {
-                        // Password tidak sama
-                        Get.snackbar(
-                          "Error",
-                          "Passwords do not match",
-                          backgroundColor: Colors.red,
-                          colorText: Colors.white,
-                        );
-                      }
-                    },
-                    child: Text(
-                      'Sign Up',
-                      style: GoogleFonts.workSans(
-                        fontSize: 26,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
-                    )),
+                    if (password == confirmPassword) {
+                      await controller.registerUser(email, password);
+                    } else {
+                      // Password tidak sama
+                      Get.snackbar(
+                        "Error",
+                        "Passwords do not match",
+                        backgroundColor: Colors.red,
+                        colorText: Colors.white,
+                      );
+                    }
+                  },
+                  child: Text(
+                    'Sign Up',
+                    style: GoogleFonts.workSans(
+                      fontSize: 26,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
               ),
               SizedBox(height: 30),
               Row(

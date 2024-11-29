@@ -1,23 +1,47 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class ProfileCompletionController extends GetxController {
-  //TODO: Implement ProfileCompletionController
+  final usernameController = TextEditingController();
+  final firstNameController = TextEditingController();
+  final lastNameController = TextEditingController();
+  final phoneController = TextEditingController();
+  final bioController = TextEditingController();
 
-  final count = 0.obs;
-  @override
-  void onInit() {
-    super.onInit();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  Future<void> submitProfile() async {
+    try {
+      final currentUser = _auth.currentUser;
+
+      if (currentUser == null) throw Exception("No user is logged in");
+
+      final name =
+          "${firstNameController.text.trim()} ${lastNameController.text.trim()}";
+
+      final data = {
+        "username": usernameController.text.trim(),
+        "name": name,
+        "email": currentUser.email,
+        "phone": phoneController.text.trim(),
+        "bio": bioController.text.trim(),
+        "profilePicture":
+            "https://example.com/default_profile_picture.png",
+        "role": "user",
+        "license": false,
+      };
+
+      await _firestore.collection("users").doc(currentUser.uid).set(data);
+      Get.snackbar("Success", "Profile updated successfully!",
+          backgroundColor: Colors.green, colorText: Colors.white);
+
+      Get.offAllNamed("/login");
+    } catch (e) {
+      Get.snackbar("Error", e.toString(),
+          backgroundColor: Colors.red, colorText: Colors.white);
+    }
   }
-
-  @override
-  void onReady() {
-    super.onReady();
-  }
-
-  @override
-  void onClose() {
-    super.onClose();
-  }
-
-  void increment() => count.value++;
 }

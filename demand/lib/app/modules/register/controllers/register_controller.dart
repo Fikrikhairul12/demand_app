@@ -90,7 +90,7 @@ class RegisterController extends GetxController {
             textConfirm: "OK",
             onConfirm: () {
               Get.back(); // Tutup dialog
-              Get.offAllNamed('/home'); // Arahkan ke halaman home
+              Get.offAllNamed('/profile-completion'); // Arahkan ke halaman isi data diri
             },
           );
         }

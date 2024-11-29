@@ -33,6 +33,20 @@ class LoginView extends GetView<LoginController> {
                   ),
                 ),
               ),
+              const SizedBox(height: 10),
+              // Center(
+              //   child: Text(
+              //     "MASUK",
+              //     style: GoogleFonts.poppins(
+              //       fontSize: 30,
+              //       fontWeight: FontWeight.bold,
+              //     ),
+              //   ),
+              // ),
+              // const Divider(
+              //   color: Color(0xff000000),
+              //   height: 3,
+              // ),
               const SizedBox(height: 20),
               Text(
                 "Email",
@@ -130,15 +144,13 @@ class LoginView extends GetView<LoginController> {
                       if (user != null) {
                         if (user.emailVerified) {
                           // Cek apakah email user termasuk dalam daftar admin
-                          const adminEmails = [
-                            "11220318@nusamandiri.ac.id"
-                          ];
+                          const adminEmails = ["11220318@nusamandiri.ac.id"];
                           if (adminEmails.contains(user.email)) {
                             // Arahkan ke Admin Dashboard
                             Get.offAllNamed('/admin-dashboard');
                           } else {
                             // Arahkan ke Home untuk user biasa
-                            Get.offAllNamed('/home');
+                            Get.offAllNamed('/main-navigation');
                           }
                         } else {
                           // Jika email belum terverifikasi
@@ -160,7 +172,7 @@ class LoginView extends GetView<LoginController> {
                       // Tampilkan error jika login gagal
                       Get.snackbar(
                         "Error",
-                        e.message ?? "Login failed",
+                        "Login failed",
                         backgroundColor: Colors.red,
                         colorText: Colors.white,
                       );
