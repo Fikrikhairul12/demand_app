@@ -71,7 +71,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.POST_JOB,
-      page: () => const PostJobView(),
+      page: () => PostJobView(),
       binding: PostJobBinding(),
     ),
     GetPage(

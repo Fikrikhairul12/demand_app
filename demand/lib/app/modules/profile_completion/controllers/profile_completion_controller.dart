@@ -29,7 +29,7 @@ class ProfileCompletionController extends GetxController {
         "phone": phoneController.text.trim(),
         "bio": bioController.text.trim(),
         "profilePicture":
-            "https://example.com/default_profile_picture.png",
+            "https://ui-avatars.com/api/?name=$name&background=random",
         "role": "user",
         "license": false,
       };

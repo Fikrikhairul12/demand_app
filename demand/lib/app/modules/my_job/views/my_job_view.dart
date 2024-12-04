@@ -19,6 +19,17 @@ class MyJobView extends GetView<MyJobController> {
           style: TextStyle(fontSize: 20),
         ),
       ),
+      floatingActionButton: Padding(
+        padding:
+            const EdgeInsets.only(bottom: 30, right: 30),
+        child: FloatingActionButton(
+          onPressed: () {
+            Get.toNamed('/post-job');
+          },
+          backgroundColor: Colors.blue,
+          child: const Icon(Icons.add),
+        ),
+      ),
     );
   }
 }
