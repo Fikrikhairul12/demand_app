@@ -1,23 +1,25 @@
+import 'package:demand/app/data/models/license_model.dart';
+import 'package:demand/app/data/services/admin_service.dart';
 import 'package:get/get.dart';
 
 class AdminDashboardController extends GetxController {
-  //TODO: Implement AdminDashboardController
+  var licenses = <GetLicense>[].obs;
+  var isLoading = true.obs;
 
-  final count = 0.obs;
+  // Mengambil data dari service
   @override
   void onInit() {
+    fetchLicenses();
     super.onInit();
   }
 
-  @override
-  void onReady() {
-    super.onReady();
+  void fetchLicenses() async {
+    isLoading(true);
+    try {
+      List<GetLicense> fetchedLicenses = await Get.find<LicenseService>().getAllLicenses();
+      licenses.assignAll(fetchedLicenses);
+    } finally {
+      isLoading(false);
+    }
   }
-
-  @override
-  void onClose() {
-    super.onClose();
-  }
-
-  void increment() => count.value++;
 }

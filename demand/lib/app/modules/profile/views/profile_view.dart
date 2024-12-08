@@ -19,6 +19,23 @@ class ProfileView extends GetView<ProfileController> {
           style: TextStyle(fontSize: 20),
         ),
       ),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 30, right: 30),
+        child: SizedBox(
+          height: 50,
+          width: 120,
+          child: FloatingActionButton(
+            onPressed: () {
+              Get.toNamed('/license-application');
+            },
+            backgroundColor: Colors.blue,
+            child: const Text(
+              'Ajukan Lisensi',
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

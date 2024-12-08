@@ -5,7 +5,7 @@ lib/
 │   |    ├── models/
 |   |    └── services/
 │   ├── modules/
-│   |    └── post_job/
+│   |    └── admin_dashboard/
 │   |        ├── bindings/
 │   |        ├── controller/
 │   |        └── view/
@@ -91,3 +91,10 @@ Step(
                 ],
               ),
             ),
+
+
+await FirebaseFirestore.instance
+    .collection('users')
+    .doc(userId)
+    .collection('license')
+    .add(licenseData);

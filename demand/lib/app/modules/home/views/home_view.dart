@@ -27,11 +27,31 @@ class HomeView extends GetView<HomeController> {
           ),
         ],
       ),
-      body: const Center(
-        child: Text(
-          'HomeView is working',
-          style: TextStyle(fontSize: 20),
-        ),
+      body: GetX<HomeController>(
+        init: HomeController(),
+        builder: (controller) {
+          if (controller.isLoading.value) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (controller.jobs.isEmpty) {
+            return const Center(child: Text('No jobs available.'));
+          } else {
+            return ListView.builder(
+              itemCount: controller.jobs.length,
+              itemBuilder: (context, index) {
+                final job = controller.jobs[index];
+                return Card(
+                  margin: const EdgeInsets.all(10),
+                  child: ListTile(
+                    title: Text(job.title,
+                        style: const TextStyle(fontWeight: FontWeight.bold)),
+                    subtitle: Text(
+                        'Created by: ${job.username}\nCreated on: ${job.createdAt}'),
+                  ),
+                );
+              },
+            );
+          }
+        },
       ),
     );
   }

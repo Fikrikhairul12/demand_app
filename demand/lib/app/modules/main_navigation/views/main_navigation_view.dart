@@ -21,11 +21,13 @@ class MainNavigationView extends GetView<MainNavigationController> {
   Widget build(BuildContext context) {
     return Obx(
       () => Scaffold(
-        body: pages[controller.currentIndex.value],
+        body: pages.isNotEmpty && controller.currentIndex.value < pages.length
+            ? pages[controller.currentIndex.value]
+            : Center(child: CircularProgressIndicator()),
         bottomNavigationBar: BottomNavigationBar(
           type: BottomNavigationBarType.shifting,
           currentIndex: controller.currentIndex.value,
-          onTap: (index) => controller.currentIndex.value = index,
+          onTap: (index) => controller.changePage(index), // Gunakan function
           selectedItemColor: Colors.black,
           unselectedItemColor: Colors.grey,
           items: const [

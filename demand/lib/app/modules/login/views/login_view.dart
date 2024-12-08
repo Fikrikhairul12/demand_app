@@ -76,7 +76,7 @@ class LoginView extends GetView<LoginController> {
                         title: "Forgot Password",
                         content: Column(
                           children: [
-                            Text(
+                            const Text(
                               "Enter your email to receive a password reset link.",
                               textAlign: TextAlign.center,
                             ),
