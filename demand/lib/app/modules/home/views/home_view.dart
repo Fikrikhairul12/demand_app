@@ -39,13 +39,52 @@ class HomeView extends GetView<HomeController> {
               itemCount: controller.jobs.length,
               itemBuilder: (context, index) {
                 final job = controller.jobs[index];
-                return Card(
-                  margin: const EdgeInsets.all(10),
-                  child: ListTile(
-                    title: Text(job.title,
-                        style: const TextStyle(fontWeight: FontWeight.bold)),
-                    subtitle: Text(
-                        'Created by: ${job.username}\nCreated on: ${job.createdAt}'),
+
+                return GestureDetector(
+                  onTap: () => controller.toggleCardExpansion(index),
+                  child: Card(
+                    margin: const EdgeInsets.all(10),
+                    child: Column(
+                      children: [
+                        ListTile(
+                          title: Text(
+                            job.title,
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          subtitle: Text(
+                            'Created by: ${job.username}\nCreated on: ${job.createdAt}',
+                          ),
+                        ),
+                        if (job.isExpanded)
+                          Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Description: ${job.description.isNotEmpty ? job.description : 'No description available'}',
+                                  style: const TextStyle(fontSize: 14),
+                                ),
+                                const SizedBox(height: 10),
+                                Text(
+                                  'Price: Rp${job.price}', // Format harga
+                                  style: const TextStyle(fontSize: 14),
+                                ),
+                                const SizedBox(height: 10),
+                                Align(
+                                  alignment: Alignment.centerRight,
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      print("Apply button pressed");
+                                    },
+                                    child: const Text('Apply'),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                      ],
+                    ),
                   ),
                 );
               },

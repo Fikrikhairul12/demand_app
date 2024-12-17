@@ -42,7 +42,6 @@ class JobModel {
   }
 }
 
-
 class Job {
   final String userId;
   final String title;
@@ -55,6 +54,7 @@ class Job {
   final String? virtualAccount;
   final bool isPayment;
   final String createdAt;
+  bool isExpanded; // Tambahan untuk toggle card
 
   Job({
     required this.userId,
@@ -68,6 +68,7 @@ class Job {
     this.virtualAccount,
     required this.isPayment,
     required this.createdAt,
+    this.isExpanded = false, // Default false
   });
 
   factory Job.fromFirestore(Map<String, dynamic> data) {
@@ -83,6 +84,7 @@ class Job {
       virtualAccount: data['virtualAccount'],
       isPayment: data['isPayment'] ?? false,
       createdAt: data['createdAt']?.toString() ?? 'No date',
+      isExpanded: false, // Default false
     );
   }
 }

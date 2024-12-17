@@ -6,6 +6,7 @@ class HomeController extends GetxController {
   var jobs = <HomeModel>[].obs;
   var isLoading = true.obs;
 
+
   // Mengambil daftar pekerjaan dan menyimpannya ke dalam list
   void fetchJobs() async {
     try {
@@ -17,6 +18,11 @@ class HomeController extends GetxController {
     } finally {
       isLoading(false);
     }
+  }
+
+  void toggleCardExpansion(int index) {
+    jobs[index].isExpanded = !jobs[index].isExpanded;
+    jobs.refresh();
   }
 
   @override

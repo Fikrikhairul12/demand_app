@@ -14,6 +14,20 @@ class FirebaseService {
       print('Error creating job: $e');
     }
   }
+
+  Future<bool> fetchUserLicense(String userId) async {
+    try {
+      final userDoc = await _firestore.collection('users').doc(userId).get();
+      if (userDoc.exists) {
+        return userDoc.data()?['license'] ?? false;
+      } else {
+        throw Exception("User document not found.");
+      }
+    } catch (e) {
+      print("Error fetching license: $e");
+      return false;
+    }
+  }
 }
 
 class LicenseApplicationService {
@@ -95,6 +109,8 @@ class HomeService {
           title: doc['title'] ?? 'No title',
           createdAt: createdAt,
           username: username,
+          description: doc['description'] ?? 'No description', // Ambil deskripsi
+          price: (doc['price'] ?? 0).toDouble(), // Ambil harga
         );
       }));
 

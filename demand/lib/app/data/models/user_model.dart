@@ -1,39 +1,35 @@
 class UserModel {
-  final String name;
+  final String id; // documentId dari koleksi users
+  final String fullName;
   final String email;
-  final String dateOfBirth;
+  final bool license;
   final String phone;
   final String profilePicture;
-  final String license;
+  final String role;
+  final String username;
 
   UserModel({
-    required this.name,
+    required this.id,
+    required this.fullName,
     required this.email,
-    required this.dateOfBirth,
+    required this.license,
     required this.phone,
     required this.profilePicture,
-    required this.license,
+    required this.role,
+    required this.username,
   });
 
-  factory UserModel.fromFirestore(Map<String, dynamic> json) {
+  // Factory untuk mapping dari Firestore ke model
+  factory UserModel.fromMap(Map<String, dynamic> map, String id) {
     return UserModel(
-      name: json['name'] as String,
-      email: json['email'] as String,
-      dateOfBirth: json['date_of_birth'] as String,
-      phone: json['phone'] as String,
-      profilePicture: json['profile_picture'] as String,
-      license: json['license'] as String,
+      id: id, // documentId
+      fullName: map['fullName'] ?? '',
+      email: map['email'] ?? '',
+      license: map['license'] ?? false,
+      phone: map['phone'] ?? '',
+      profilePicture: map['profilePicture'] ?? '',
+      role: map['role'] ?? '',
+      username: map['username'] ?? '',
     );
-  }
-
-  Map<String, dynamic> toFirestore() {
-    return {
-      'name': name,
-      'email': email,
-      'date_of_birth': dateOfBirth,
-      'phone': phone,
-      'profile_picture': profilePicture,
-      'license': license,
-    };
   }
 }

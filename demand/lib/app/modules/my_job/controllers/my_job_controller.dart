@@ -4,12 +4,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 
 class MyJobController extends GetxController {
+  final FirebaseService _firebaseService = FirebaseService();
   final JobService _jobService = JobService();
   final RxList<Job> jobs = <Job>[].obs;
   final RxBool isLoading = true.obs;
 
   // Mapping jobId to username
   final RxMap<String, String> jobUsernames = <String, String>{}.obs;
+
+  // Menyimpan status license user
+  final RxBool hasLicense = false.obs;
 
   // Get current user ID
   String get currentUserId {
@@ -20,7 +24,13 @@ class MyJobController extends GetxController {
   Future<void> fetchJobs() async {
     try {
       isLoading.value = true;
+
       final userId = currentUserId;
+
+      // Fetch license status
+      hasLicense.value = await _firebaseService.fetchUserLicense(userId);
+
+      // Fetch job data
       final fetchedJobs = await _jobService.fetchJobsByUser(userId);
       jobs.assignAll(fetchedJobs);
 
@@ -36,5 +46,14 @@ class MyJobController extends GetxController {
     } finally {
       isLoading.value = false;
     }
+  }
+
+  void toggleCardExpansion(int index) {
+    jobs[index].isExpanded = !jobs[index].isExpanded;
+    jobs.refresh();
+  }
+
+  bool isCardExpanded(int index) {
+    return jobs[index].isExpanded;
   }
 }

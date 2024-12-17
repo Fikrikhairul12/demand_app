@@ -31,63 +31,100 @@ class MyJobView extends GetView<MyJobController> {
           );
         }
 
-        return ListView.builder(
-          itemCount: controller.jobs.length,
-          itemBuilder: (context, index) {
-            final job = controller.jobs[index];
-            final username =
-                controller.jobUsernames[job.userId] ?? "Unknown User";
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Text(
+                "History Job",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+            ),
+            Expanded(
+              child: ListView.builder(
+                itemCount: controller.jobs.length,
+                itemBuilder: (context, index) {
+                  final job = controller.jobs[index];
+                  final username =
+                      controller.jobUsernames[job.userId] ?? "Unknown User";
 
-            return GestureDetector(
-              onTap: () {
-                showModalBottomSheet(
-                  context: context,
-                  builder: (_) => Container(
-                    padding: const EdgeInsets.all(16),
-                    child: SingleChildScrollView(
+                  return GestureDetector(
+                    onTap: () => controller.toggleCardExpansion(index),
+                    child: Card(
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 8),
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Judul: ${job.title}",
-                              style: Theme.of(context).textTheme.titleLarge),
-                          const SizedBox(height: 8),
-                          Text("Dibuat oleh: $username"),
-                          const SizedBox(height: 8),
-                          Text("Deskripsi: ${job.description}"),
-                          const SizedBox(height: 8),
-                          Text("Kategori: ${job.category}"),
-                          const SizedBox(height: 8),
-                          Text("Tipe Pekerjaan: ${job.jobType}"),
-                          const SizedBox(height: 8),
-                          Text("Harga: Rp ${job.price}"),
-                          const SizedBox(height: 8),
-                          Text("Metode Pembayaran: ${job.paymentMethod}"),
-                          if (job.virtualAccount != null)
-                            Text("Virtual Account: ${job.virtualAccount}"),
-                          const SizedBox(height: 8),
-                          Text("Dibuat: ${job.createdAt}"),
+                          ListTile(
+                            title: Text(
+                              job.title,
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            subtitle: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("Dibuat oleh: $username"),
+                                Text("Kategori: ${job.category}"),
+                                Text("Tipe: ${job.jobType}"),
+                                Text("Dibuat: ${job.createdAt}"),
+                              ],
+                            ),
+                          ),
+                          if (controller
+                              .isCardExpanded(index)) // Perluas jika aktif
+                            Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Deskripsi: ${job.description}",
+                                    style: const TextStyle(fontSize: 14),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    "Harga: Rp${job.price}",
+                                    style: const TextStyle(fontSize: 14),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    "Metode Pembayaran: ${job.paymentMethod}",
+                                    style: const TextStyle(fontSize: 14),
+                                  ),
+                                  if (job.virtualAccount != null)
+                                    Text(
+                                      "Virtual Account: ${job.virtualAccount}",
+                                      style: const TextStyle(fontSize: 14),
+                                    ),
+                                ],
+                              ),
+                            ),
                         ],
                       ),
                     ),
-                  ),
-                );
-              },
-              child: Card(
-                child: ListTile(
-                  title: Text(job.title),
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("Dibuat oleh: $username"),
-                      Text("Kategori: ${job.category}"),
-                      Text("Tipe: ${job.jobType}"),
-                      Text("Dibuat: ${job.createdAt}"),
-                    ],
+                  );
+                },
+              ),
+            ),
+            if (controller.hasLicense.value) ...[
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+                child: Text(
+                  "History Lamar Job",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
-            );
-          },
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                child: Text("Berhasil memunculkan fitur History Lamar Job."),
+              ),
+            ],
+          ],
         );
       }),
       floatingActionButton: Padding(
@@ -101,23 +138,5 @@ class MyJobView extends GetView<MyJobController> {
         ),
       ),
     );
-  }
-
-  String formatDate(DateTime date) {
-    final months = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "Mei",
-      "Jun",
-      "Jul",
-      "Agu",
-      "Sep",
-      "Okt",
-      "Nov",
-      "Des"
-    ];
-    return "${date.hour}:${date.minute.toString().padLeft(2, '0')} ${date.day} ${months[date.month - 1]} ${date.year}";
   }
 }

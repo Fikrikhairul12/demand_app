@@ -21,8 +21,7 @@ class AdminDashboardView extends GetView<AdminDashboardController> {
             onPressed: () async {
               try {
                 await FirebaseAuth.instance.signOut();
-                Get.offAllNamed(
-                    '/login');
+                Get.offAllNamed('/login');
               } catch (e) {
                 print('Error during logout: $e');
               }
@@ -32,22 +31,87 @@ class AdminDashboardView extends GetView<AdminDashboardController> {
       ),
       body: Obx(() {
         if (controller.isLoading.value) {
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         }
 
         if (controller.licenses.isEmpty) {
-          return Center(child: Text("No licenses found"));
+          return const Center(child: Text("No licenses found"));
+        }
+
+        if (controller.users.isEmpty) {
+          return const Center(child: Text("No users found"));
         }
 
         return ListView.builder(
           itemCount: controller.licenses.length,
           itemBuilder: (context, index) {
             var license = controller.licenses[index];
-            return ListTile(
-              title: Text(license.fullName),
-              subtitle: Text('Skill Category: ${license.skillCategory}'),
-              trailing: Text(license.jobType),
-            );
+            if (index < controller.users.length) {
+              var user = controller.users[index];
+              return GestureDetector(
+                onTap: () => controller.toggleExpansion(index),
+                child: Card(
+                  margin: EdgeInsets.all(10),
+                  child: Padding(
+                    padding: EdgeInsets.all(10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          license.fullName,
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                        SizedBox(height: 5),
+                        Text('Skill Category: ${license.skillCategory}'),
+                        Text('Job Type: ${license.jobType}'),
+                        Text('Status: ${license.status}'),
+                        if (license.isExpanded) ...[
+                          Divider(),
+                          Text('Gender: ${license.gender}'),
+                          Text('Phone: ${license.phone}'),
+                          Text('Email: ${license.email}'),
+                          Text('Motivation: ${license.motivation}'),
+                          SizedBox(height: 10),
+                          if (controller.shouldShowButtons(license.status)) ...[
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                ElevatedButton(
+                                  onPressed: () {
+                                    controller.approveLicense(
+                                      user.id,
+                                      license.id,
+                                    );
+                                    print("Agree pressed for ${license.id}");
+                                    print("User ID: ${user.id}");
+                                  },
+                                  child: Text('Agree'),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.green,
+                                  ),
+                                ),
+                                ElevatedButton(
+                                  onPressed: () {
+                                    print("Disagree pressed for ${license.id}");
+                                  },
+                                  child: Text('Disagree'),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.red,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ],
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            } else {
+              return const Center(child: Text("User data mismatch"));
+            }
           },
         );
       }),

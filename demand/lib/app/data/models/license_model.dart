@@ -10,6 +10,7 @@ class LicenseApplicationModel {
   final String skillCategory;
   final String jobType;
   final String motivation;
+  final String status;
 
   LicenseApplicationModel({
     required this.fullName,
@@ -23,6 +24,7 @@ class LicenseApplicationModel {
     required this.skillCategory,
     required this.jobType,
     required this.motivation,
+    this.status = 'pending',
   });
 
   Map<String, dynamic> toJson() {
@@ -38,6 +40,7 @@ class LicenseApplicationModel {
       'skillCategory': skillCategory,
       'jobType': jobType,
       'motivation': motivation,
+      'status': status,
     };
   }
 }
@@ -51,6 +54,9 @@ class GetLicense {
   String jobType;
   String email;
   String skillCategory;
+  String ktpNumber;
+  String status;
+  bool isExpanded;
 
 
   GetLicense({
@@ -62,6 +68,9 @@ class GetLicense {
     required this.jobType,
     required this.email,
     required this.skillCategory,
+    required this.ktpNumber,
+    required this.status,
+    this.isExpanded = false,
   });
 
   // Membuat dari Map (Firebase Snapshot)
@@ -75,6 +84,8 @@ class GetLicense {
       jobType: data['jobType'] ?? '',
       email: data['email'] ?? '',
       skillCategory: data['skillCategory'] ?? '',
+      ktpNumber: data['ktpNumber'] ?? '',
+      status: data['status'] ?? 'pending',
     );
   }
 
@@ -88,6 +99,8 @@ class GetLicense {
       'jobType': jobType,
       'email': email,
       'skillCategory': skillCategory,
+      'ktpNumber': ktpNumber,
+      'status': status,
     };
   }
 }
