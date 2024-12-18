@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
-
 import '../controllers/profile_controller.dart';
 
 class ProfileView extends GetView<ProfileController> {
@@ -12,6 +11,20 @@ class ProfileView extends GetView<ProfileController> {
       appBar: AppBar(
         title: const Text('ProfileView'),
         centerTitle: true,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () async {
+              try {
+                await FirebaseAuth.instance.signOut();
+                Get.offAllNamed(
+                    '/login'); // Arahkan ke halaman login setelah logout
+              } catch (e) {
+                print('Error during logout: $e');
+              }
+            },
+          ),
+        ],
       ),
       body: const Center(
         child: Text(

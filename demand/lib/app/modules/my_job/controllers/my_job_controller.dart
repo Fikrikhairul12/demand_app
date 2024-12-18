@@ -8,17 +8,20 @@ class MyJobController extends GetxController {
   final JobService _jobService = JobService();
   final RxList<Job> jobs = <Job>[].obs;
   final RxBool isLoading = true.obs;
-
-  // Mapping jobId to username
+  final RxBool showAll = false.obs;
   final RxMap<String, String> jobUsernames = <String, String>{}.obs;
-
-  // Menyimpan status license user
   final RxBool hasLicense = false.obs;
 
   // Get current user ID
   String get currentUserId {
     final user = FirebaseAuth.instance.currentUser;
     return user?.uid ?? '';
+  }
+
+  @override
+  void onInit() {
+    super.onInit();
+    fetchJobs();
   }
 
   Future<void> fetchJobs() async {
@@ -34,12 +37,13 @@ class MyJobController extends GetxController {
       final fetchedJobs = await _jobService.fetchJobsByUser(userId);
       jobs.assignAll(fetchedJobs);
 
-      for (var job in fetchedJobs) {
+      // Fetch usernames
+      await Future.wait(fetchedJobs.map((job) async {
         final username = await _jobService.fetchUsername(job.userId);
         if (username != null) {
           jobUsernames[job.userId] = username;
         }
-      }
+      }));
     } catch (e) {
       Get.snackbar('Error', 'Failed to load jobs: $e');
       print('Failed to load jobs: $e');
@@ -55,5 +59,9 @@ class MyJobController extends GetxController {
 
   bool isCardExpanded(int index) {
     return jobs[index].isExpanded;
+  }
+
+  void toggleShowAll() {
+    showAll.value = !showAll.value;
   }
 }

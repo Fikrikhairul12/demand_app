@@ -106,6 +106,7 @@ class HomeService {
         String createdAt = _formatDate(doc['createdAt']);
 
         return HomeModel(
+          id: doc.id,
           title: doc['title'] ?? 'No title',
           createdAt: createdAt,
           username: username,

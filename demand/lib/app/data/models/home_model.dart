@@ -1,12 +1,14 @@
 class HomeModel {
+  final String id;
   final String title;
   final String createdAt;
   final String username;
-  final String description; // Menambahkan deskripsi pekerjaan
-  final double price; // Menambahkan harga pekerjaan
+  final String description;
+  final double price;
   bool isExpanded;
 
   HomeModel({
+    required this.id,
     required this.title,
     required this.createdAt,
     required this.username,
@@ -16,8 +18,9 @@ class HomeModel {
   });
 
   // Fungsi untuk membuat HomeModel dari Firestore snapshot
-  factory HomeModel.fromFirestore(Map<String, dynamic> data) {
+  factory HomeModel.fromFirestore(String id, Map<String, dynamic> data) {
     return HomeModel(
+      id: id,
       title: data['title'] ?? 'No title',
       createdAt: data['createdAt'] ?? 'No date',
       username: data['username'] ?? 'Unknown',
