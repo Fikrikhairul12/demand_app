@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:demand/app/data/models/home_model.dart';
 import 'package:demand/app/data/services/firebase_service.dart';
+import 'package:demand/app/modules/my_job/controllers/my_job_controller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -29,7 +30,6 @@ class HomeController extends GetxController {
 
   void applyForJob(String jobId) async {
     try {
-      // Ambil User ID dari Firebase Authentication
       final user = FirebaseAuth.instance.currentUser;
       if (user == null) {
         print("User not logged in.");
@@ -37,17 +37,17 @@ class HomeController extends GetxController {
       }
       String userId = user.uid;
 
-      // Cek apakah user memiliki lisensi
+      // Cek lisensi user
       final userDoc = await FirebaseFirestore.instance
           .collection('users')
           .doc(userId)
           .get();
 
       if (!userDoc.exists || !(userDoc['license'] ?? false)) {
-        // Jika user tidak memiliki lisensi, tampilkan dialog
         Get.defaultDialog(
           title: 'License Required',
-          middleText: 'You cannot apply for this job because you do not have a license.',
+          middleText:
+              'You cannot apply for this job because you do not have a license.',
           textConfirm: 'OK',
           onConfirm: () {
             Get.back();
@@ -56,7 +56,7 @@ class HomeController extends GetxController {
         return;
       }
 
-      // Ambil data pekerjaan berdasarkan jobId
+      // Ambil data job
       final jobDoc =
           await FirebaseFirestore.instance.collection('jobs').doc(jobId).get();
 
@@ -65,9 +65,21 @@ class HomeController extends GetxController {
         return;
       }
 
+      // Cek status job
+      if (jobDoc['status'] == 'applied') {
+        Get.snackbar(
+          'Info',
+          'Job already applied by another user.',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.orange,
+          colorText: Colors.white,
+        );
+        return;
+      }
+
+      // Cek apakah user melamar job milik sendiri
       String jobOwnerId = jobDoc['userId'] ?? '';
 
-      // Cek apakah user mencoba melamar jobnya sendiri
       if (userId == jobOwnerId) {
         Get.snackbar(
           'Error',
@@ -76,11 +88,10 @@ class HomeController extends GetxController {
           backgroundColor: Colors.red,
           colorText: Colors.white,
         );
-        print("Tidak bisa melamar job buatan sendiri.");
         return;
       }
 
-      // Cek apakah sudah melamar job yang sama
+      // Cek apakah user sudah melamar job ini
       final applicationsRef =
           FirebaseFirestore.instance.collection('applications');
       final querySnapshot = await applicationsRef
@@ -96,16 +107,24 @@ class HomeController extends GetxController {
           backgroundColor: Colors.orange,
           colorText: Colors.white,
         );
-        print("User sudah melamar job ini.");
         return;
       }
 
-      // Simpan data apply ke koleksi 'applications'
+      // Update status job ke 'applied'
+      await FirebaseFirestore.instance.collection('jobs').doc(jobId).update({
+        'status': 'applied',
+      });
+
+      // Tambahkan aplikasi ke collection 'applications'
       await applicationsRef.add({
         'userId': userId,
         'jobId': jobId,
         'apply_date': Timestamp.now(),
       });
+
+      // Update data di controller
+      final myJobController = Get.find<MyJobController>();
+      await myJobController.fetchAppliedJobs();
 
       Get.snackbar(
         'Success',
@@ -114,7 +133,6 @@ class HomeController extends GetxController {
         backgroundColor: Colors.green,
         colorText: Colors.white,
       );
-      print("Apply berhasil!");
     } catch (e) {
       print("Error saat melamar: $e");
       Get.snackbar(

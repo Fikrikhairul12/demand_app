@@ -59,11 +59,19 @@ class HomeView extends GetView<HomeController> {
                                 Align(
                                   alignment: Alignment.centerRight,
                                   child: ElevatedButton(
-                                    onPressed: () {
-                                      controller.applyForJob(job
-                                          .id); // Kirim job ID ke fungsi apply
-                                    },
-                                    child: const Text('Apply'),
+                                    onPressed: job.status == 'applied'
+                                        ? null
+                                        : () {
+                                            controller.applyForJob(job.id);
+                                          },
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: job.status == 'applied'
+                                          ? Colors.grey
+                                          : Colors.blue,
+                                    ),
+                                    child: Text(job.status == 'applied'
+                                        ? 'Applied'
+                                        : 'Apply'),
                                   ),
                                 ),
                               ],

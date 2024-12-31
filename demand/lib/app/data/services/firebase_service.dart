@@ -89,6 +89,33 @@ class JobService {
       throw Exception('Failed to fetch username: $e');
     }
   }
+
+  Future<List<Map<String, dynamic>>> fetchApplicationsByUser(
+      String userId) async {
+    try {
+      final querySnapshot = await _firestore
+          .collection('applications')
+          .where('userId', isEqualTo: userId)
+          .get();
+      return querySnapshot.docs.map((doc) => doc.data()).toList();
+    } catch (e) {
+      throw Exception('Failed to fetch applications: $e');
+    }
+  }
+
+  Future<List<Job>> fetchJobsByIds(List<String> jobIds) async {
+    try {
+      final querySnapshot = await _firestore
+          .collection('jobs')
+          .where(FieldPath.documentId, whereIn: jobIds)
+          .get();
+      return querySnapshot.docs
+          .map((doc) => Job.fromFirestore(doc.data()))
+          .toList();
+    } catch (e) {
+      throw Exception('Failed to fetch jobs by IDs: $e');
+    }
+  }
 }
 
 class HomeService {
@@ -110,8 +137,10 @@ class HomeService {
           title: doc['title'] ?? 'No title',
           createdAt: createdAt,
           username: username,
-          description: doc['description'] ?? 'No description', // Ambil deskripsi
+          description:
+              doc['description'] ?? 'No description', // Ambil deskripsi
           price: (doc['price'] ?? 0).toDouble(), // Ambil harga
+          status: doc['status'] ?? 'uploaded',
         );
       }));
 
@@ -145,5 +174,85 @@ class HomeService {
 
     final formatter = DateFormat('HH:mm dd-MMM');
     return formatter.format(date);
+  }
+}
+
+class ApplicationService {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  Future<String?> getJobIdByTitle(String title) async {
+    try {
+      final querySnapshot = await _firestore
+          .collection('jobs')
+          .where('title', isGreaterThanOrEqualTo: title)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        for (var doc in querySnapshot.docs) {
+          if (doc['title'].toString().toLowerCase() == title.toLowerCase()) {
+            // print("Matched Job: ${doc.data()}");
+            return doc.id;
+          }
+        }
+      }
+      print("No matching job found for title: $title");
+    } catch (e) {
+      print("Error fetching job by title: $e");
+    }
+    return null;
+  }
+
+  Future<Job?> getJobById(String jobId) async {
+    try {
+      final doc = await _firestore.collection('jobs').doc(jobId).get();
+      if (doc.exists) {
+        final data = doc.data();
+        // print("Data from Firestore: $data"); // Debugging
+        return Job.fromFirestore(data!);
+      } else {
+        print("No document found for jobId: $jobId"); // Debugging
+      }
+    } catch (e) {
+      print("Error fetching job: $e"); // Debugging
+    }
+    return null;
+  }
+
+  Future<Map<String, dynamic>?> getUserById(String userId) async {
+    try {
+      final doc = await _firestore.collection('users').doc(userId).get();
+      if (doc.exists) {
+        return doc.data();
+      }
+    } catch (e) {
+      print("Error fetching user: $e");
+    }
+    return null;
+  }
+
+  // Simpan data ke koleksi submission
+  Future<void> submitTaskToFirestore(
+      Map<String, dynamic> submissionData) async {
+    try {
+      await _firestore.collection('submission').add(submissionData);
+      print("Tugas berhasil disimpan ke Firestore.");
+    } catch (e) {
+      print("Error saat menyimpan tugas: $e");
+      throw Exception("Error menyimpan tugas ke Firestore.");
+    }
+  }
+
+  // Update status job menjadi finished
+  Future<void> updateJobStatus(String jobId, String newStatus) async {
+    try {
+      await _firestore
+          .collection('jobs')
+          .doc(jobId)
+          .update({'status': newStatus});
+      print("Status job berhasil diperbarui ke $newStatus.");
+    } catch (e) {
+      print("Error saat memperbarui status job: $e");
+      throw Exception("Error memperbarui status job.");
+    }
   }
 }

@@ -7,6 +7,7 @@ class MyJobController extends GetxController {
   final FirebaseService _firebaseService = FirebaseService();
   final JobService _jobService = JobService();
   final RxList<Job> jobs = <Job>[].obs;
+  final RxList<Job> appliedJobs = <Job>[].obs;
   final RxBool isLoading = true.obs;
   final RxBool showAll = false.obs;
   final RxMap<String, String> jobUsernames = <String, String>{}.obs;
@@ -22,6 +23,7 @@ class MyJobController extends GetxController {
   void onInit() {
     super.onInit();
     fetchJobs();
+    fetchAppliedJobs();
   }
 
   Future<void> fetchJobs() async {
@@ -52,6 +54,34 @@ class MyJobController extends GetxController {
     }
   }
 
+  Future<void> fetchAppliedJobs() async {
+    try {
+      final userId = currentUserId;
+      final applicationData = await _jobService.fetchApplicationsByUser(userId);
+
+      if (applicationData.isEmpty) {
+        appliedJobs.clear();
+        return;
+      }
+
+      final appliedJobIds =
+          applicationData.map((app) => app['jobId'] as String).toList();
+
+      final fetchedJobs = await _jobService.fetchJobsByIds(appliedJobIds);
+      appliedJobs.assignAll(fetchedJobs);
+
+      await Future.wait(fetchedJobs.map((job) async {
+        final username = await _jobService.fetchUsername(job.userId);
+        if (username != null) {
+          jobUsernames[job.userId] = username;
+        }
+      }));
+    } catch (e) {
+      Get.snackbar('Error', 'Failed to load applied jobs: $e');
+      print('Failed to load applied jobs: $e');
+    }
+  }
+
   void toggleCardExpansion(int index) {
     jobs[index].isExpanded = !jobs[index].isExpanded;
     jobs.refresh();
@@ -63,5 +93,23 @@ class MyJobController extends GetxController {
 
   void toggleShowAll() {
     showAll.value = !showAll.value;
+  }
+
+  void toggleJobExpansion(int index) {
+    jobs[index].isExpanded = !jobs[index].isExpanded;
+    jobs.refresh();
+  }
+
+  void toggleAppliedJobExpansion(int index) {
+    appliedJobs[index].isExpanded = !appliedJobs[index].isExpanded;
+    appliedJobs.refresh();
+  }
+
+  bool isJobExpanded(int index) {
+    return jobs[index].isExpanded;
+  }
+
+  bool isAppliedJobExpanded(int index) {
+    return appliedJobs[index].isExpanded;
   }
 }

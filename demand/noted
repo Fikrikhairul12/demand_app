@@ -5,7 +5,7 @@ lib/
 │   |    ├── models/
 |   |    └── services/
 │   ├── modules/
-│   |    └── admin_dashboard/
+│   |    └── application/
 │   |        ├── bindings/
 │   |        ├── controller/
 │   |        └── view/
@@ -13,88 +13,3 @@ lib/
 │   └── widgets/
 │
 └── main.dart
-
-
-Authentication (email dan mungkin OTP).
-Cloud Firestore.
-Firebase Storage.
-Cloud Messaging untuk notifikasi.
-Analytics untuk pelacakan performa aplikasi.
-
-
-Step(
-              title: const Text('Job Details'),
-              content: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  TextField(
-                    decoration: const InputDecoration(labelText: 'Job Title'),
-                    onChanged: (value) {
-                      controller.title = value;
-                      controller.validateStep1();
-                    },
-                  ),
-                  TextField(
-                    decoration: const InputDecoration(labelText: 'Description'),
-                    onChanged: (value) {
-                      controller.description = value;
-                      controller.validateStep1();
-                    },
-                  ),
-                  const SizedBox(height: 20),
-                  DropdownButtonFormField<String>(
-                    value: controller.selectedCategory.value.isEmpty
-                        ? null
-                        : controller.selectedCategory.value,
-                    decoration: const InputDecoration(
-                      labelText: 'Category',
-                    ),
-                    items: controller.jobCategories.map((category) {
-                      return DropdownMenuItem<String>(
-                        value: category,
-                        child: Text(category),
-                      );
-                    }).toList(),
-                    onChanged: (value) {
-                      controller.selectedCategory.value = value!;
-                      controller.validateStep1();
-                    },
-                  ),
-                  const SizedBox(height: 20),
-                  const Text('Job Type'),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: RadioListTile<String>(
-                          title: const Text('Online'),
-                          value: 'Online',
-                          groupValue: controller.jobType.value,
-                          onChanged: (value) {
-                            controller.jobType.value = value!;
-                            controller.validateStep1();
-                          },
-                        ),
-                      ),
-                      Expanded(
-                        child: RadioListTile<String>(
-                          title: const Text('Offline'),
-                          value: 'Offline',
-                          groupValue: controller.jobType.value,
-                          onChanged: (value) {
-                            controller.jobType.value = value!;
-                            controller.validateStep1();
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-
-
-await FirebaseFirestore.instance
-    .collection('users')
-    .doc(userId)
-    .collection('license')
-    .add(licenseData);

@@ -52,19 +52,17 @@ class MyJobView extends GetView<MyJobController> {
                       controller.jobUsernames[job.userId] ?? "Unknown User";
 
                   return GestureDetector(
-                    onTap: () => controller.toggleCardExpansion(index),
+                    onTap: () => controller.toggleJobExpansion(index),
                     child: Card(
                       margin: const EdgeInsets.symmetric(
                           horizontal: 16, vertical: 8),
                       child: Padding(
-                        padding:
-                            const EdgeInsets.all(12.0), // Padding internal Card
+                        padding: const EdgeInsets.all(12.0),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             ListTile(
-                              contentPadding: EdgeInsets
-                                  .zero, // Hapus padding default ListTile
+                              contentPadding: EdgeInsets.zero,
                               title: Text(
                                 job.title,
                                 style: const TextStyle(
@@ -111,10 +109,99 @@ class MyJobView extends GetView<MyJobController> {
                     ),
                   ),
                 ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16),
-                  child: Text("Berhasil memunculkan fitur History Lamar Job."),
-                ),
+                if (controller.appliedJobs.isEmpty)
+                  const Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: Text(
+                      "Kamu belum melamar job!",
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  )
+                else
+                  Obx(() => ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: controller.appliedJobs.length,
+                        itemBuilder: (context, index) {
+                          final job = controller.appliedJobs[index];
+                          final username =
+                              controller.jobUsernames[job.userId] ??
+                                  "Unknown User";
+
+                          return GestureDetector(
+                            onTap: () =>
+                                controller.toggleAppliedJobExpansion(index),
+                            child: Card(
+                              margin: const EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 8),
+                              child: Padding(
+                                padding: const EdgeInsets.all(12.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    ListTile(
+                                      contentPadding: EdgeInsets.zero,
+                                      title: Text(
+                                        job.title,
+                                        style: const TextStyle(
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      subtitle: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text("Dibuat oleh: $username"),
+                                          Text("Kategori: ${job.category}"),
+                                          Text("Tipe: ${job.jobType}"),
+                                          Text("Dibuat: ${job.createdAt}"),
+                                        ],
+                                      ),
+                                    ),
+                                    if (controller.isAppliedJobExpanded(index))
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text("Deskripsi: ${job.description}"),
+                                          Text("Harga: Rp${job.price}"),
+                                          Text(
+                                              "Metode Pembayaran: ${job.paymentMethod}"),
+                                          if (job.virtualAccount != null)
+                                            Text(
+                                                "Virtual Account: ${job.virtualAccount}"),
+                                          const SizedBox(height: 10),
+                                          Align(
+                                            alignment: Alignment.centerRight,
+                                            child: ElevatedButton(
+                                              onPressed:
+                                                  job.status == 'finished'
+                                                      ? null
+                                                      : () {
+                                                          Get.toNamed(
+                                                              '/application',
+                                                              arguments: job);
+                                                        },
+                                              style: ElevatedButton.styleFrom(
+                                                backgroundColor:
+                                                    job.status == 'finished'
+                                                        ? Colors.grey
+                                                        : Colors.blue,
+                                              ),
+                                              child: Text(
+                                                  job.status == 'finished'
+                                                      ? 'Selesai'
+                                                      : 'Kerjakan'),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      )),
               ],
             ],
           ),
