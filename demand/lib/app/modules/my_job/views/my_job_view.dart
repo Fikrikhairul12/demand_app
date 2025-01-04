@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:get/get.dart';
 
@@ -95,13 +96,42 @@ class MyJobView extends GetView<MyJobController> {
                                   if (job.status == "finished" &&
                                       controller.jobLinks
                                           .containsKey(job.title))
-                                    ElevatedButton(
-                                      onPressed: () {
-                                        final link =
-                                            controller.jobLinks[job.title];
-                                        print("Link: $link");
-                                      },
-                                      child: Text("Link Tugas"),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                            "Notes: ${controller.jobNotes[job.title]}"), // Tampilkan notes
+                                        ElevatedButton(
+                                          onPressed: () async {
+                                            final link = controller
+                                                    .jobLinks[job.title] ??
+                                                '';
+                                            try {
+                                              if (link.isNotEmpty) {
+                                                await Clipboard.setData(
+                                                    ClipboardData(text: link));
+                                                Get.snackbar(
+                                                  "Success",
+                                                  "Link berhasil disalin ke clipboard!",
+                                                  snackPosition:
+                                                      SnackPosition.BOTTOM,
+                                                );
+                                              } else {
+                                                Get.snackbar(
+                                                  "Error",
+                                                  "Link tidak tersedia!",
+                                                  snackPosition:
+                                                      SnackPosition.BOTTOM,
+                                                );
+                                              }
+                                            } catch (e) {
+                                              print('Error : $e');
+                                            }
+                                          },
+                                          child: const Text("Salin Link"),
+                                        ),
+                                      ],
                                     ),
                                 ],
                               ),

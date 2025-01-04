@@ -13,6 +13,7 @@ class MyJobController extends GetxController {
   final RxMap<String, String> jobUsernames = <String, String>{}.obs;
   final RxBool hasLicense = false.obs;
   final RxMap<String, String> jobLinks = <String, String>{}.obs;
+  final RxMap<String, String> jobNotes = <String, String>{}.obs;
 
   // Get current user ID
   String get currentUserId {
@@ -52,6 +53,7 @@ class MyJobController extends GetxController {
                 await _firebaseService.getSubmissionDataByJobId(documentId);
             if (submissionData != null) {
               jobLinks[job.title] = submissionData['link'] ?? 'No link';
+              jobNotes[job.title] = submissionData['notes'] ?? 'No notes';
             }
           }
         }

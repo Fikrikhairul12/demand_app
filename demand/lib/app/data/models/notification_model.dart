@@ -21,7 +21,9 @@ class NotificationModel {
       userId: data['userId'] ?? '',
       message: data['message'] ?? '',
       type: data['type'] ?? '',
-      timestamp: (data['timestamp'] as Timestamp).toDate(),
+      timestamp: (data['timestamp'] != null && data['timestamp'] is Timestamp)
+        ? (data['timestamp'] as Timestamp).toDate()
+        : DateTime.now(),
     );
   }
 }

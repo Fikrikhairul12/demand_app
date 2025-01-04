@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 import '../controllers/notification_controller.dart';
 
@@ -39,7 +40,7 @@ class NotificationView extends GetView<NotificationController> {
                 ),
                 subtitle: Text(notification.message),
                 trailing: Text(
-                  "${notification.timestamp.hour}:${notification.timestamp.minute}",
+                  DateFormat('hh:mm a').format(notification.timestamp),
                   style: const TextStyle(color: Colors.grey),
                 ),
               ),

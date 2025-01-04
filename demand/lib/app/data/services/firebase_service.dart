@@ -301,8 +301,18 @@ class NotificationService {
         .where('userId', isEqualTo: userId)
         .orderBy('timestamp', descending: true)
         .snapshots()
-        .map((query) => query.docs
-            .map((doc) => NotificationModel.fromFirestore(doc.data(), doc.id))
-            .toList());
+        .map((query) {
+      return query.docs
+          .map((doc) {
+            try {
+              return NotificationModel.fromFirestore(doc.data(), doc.id);
+            } catch (e) {
+              print("Error parsing document: ${doc.id}, error: $e");
+              return null;
+            }
+          })
+          .whereType<NotificationModel>()
+          .toList();
+    });
   }
 }
