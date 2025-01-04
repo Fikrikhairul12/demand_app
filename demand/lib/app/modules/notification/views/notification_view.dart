@@ -9,16 +9,44 @@ class NotificationView extends GetView<NotificationController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 185, 224, 255),
       appBar: AppBar(
-        title: const Text('NotificationView'),
-        centerTitle: true,
-      ),
-      body: const Center(
-        child: Text(
-          'NotificationView is working',
-          style: TextStyle(fontSize: 20),
+        backgroundColor: const Color(0xff016FCB),
+        title: Image.asset(
+          'assets/icons/demandtext.png',
         ),
       ),
+      body: Obx(() {
+        final notifications = controller.notifications;
+        if (notifications.isEmpty) {
+          return const Center(
+            child: Text(
+              "No notifications available",
+              style: TextStyle(fontSize: 16),
+            ),
+          );
+        }
+        return ListView.builder(
+          itemCount: notifications.length,
+          itemBuilder: (context, index) {
+            final notification = notifications[index];
+            return Card(
+              margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+              child: ListTile(
+                title: Text(
+                  notification.type,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                subtitle: Text(notification.message),
+                trailing: Text(
+                  "${notification.timestamp.hour}:${notification.timestamp.minute}",
+                  style: const TextStyle(color: Colors.grey),
+                ),
+              ),
+            );
+          },
+        );
+      }),
     );
   }
 }

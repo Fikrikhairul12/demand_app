@@ -11,9 +11,12 @@ class MyJobView extends GetView<MyJobController> {
     controller.fetchJobs();
 
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 185, 224, 255),
       appBar: AppBar(
-        title: const Text('Pekerjaan Saya'),
-        centerTitle: true,
+        backgroundColor: const Color(0xff016FCB),
+        title: Image.asset(
+          'assets/icons/demandtext.png',
+        ),
       ),
       body: Obx(() {
         if (controller.isLoading.value) {
@@ -89,6 +92,17 @@ class MyJobView extends GetView<MyJobController> {
                                   if (job.virtualAccount != null)
                                     Text(
                                         "Virtual Account: ${job.virtualAccount}"),
+                                  if (job.status == "finished" &&
+                                      controller.jobLinks
+                                          .containsKey(job.title))
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        final link =
+                                            controller.jobLinks[job.title];
+                                        print("Link: $link");
+                                      },
+                                      child: Text("Link Tugas"),
+                                    ),
                                 ],
                               ),
                           ],

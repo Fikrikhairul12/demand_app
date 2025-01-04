@@ -5,7 +5,7 @@ lib/
 │   |    ├── models/
 |   |    └── services/
 │   ├── modules/
-│   |    └── application/
+│   |    └── profile/
 │   |        ├── bindings/
 │   |        ├── controller/
 │   |        └── view/

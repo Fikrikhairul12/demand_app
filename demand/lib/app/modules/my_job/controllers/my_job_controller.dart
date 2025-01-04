@@ -12,6 +12,7 @@ class MyJobController extends GetxController {
   final RxBool showAll = false.obs;
   final RxMap<String, String> jobUsernames = <String, String>{}.obs;
   final RxBool hasLicense = false.obs;
+  final RxMap<String, String> jobLinks = <String, String>{}.obs;
 
   // Get current user ID
   String get currentUserId {
@@ -32,18 +33,27 @@ class MyJobController extends GetxController {
 
       final userId = currentUserId;
 
-      // Fetch license status
       hasLicense.value = await _firebaseService.fetchUserLicense(userId);
-
-      // Fetch job data
       final fetchedJobs = await _jobService.fetchJobsByUser(userId);
       jobs.assignAll(fetchedJobs);
 
-      // Fetch usernames
       await Future.wait(fetchedJobs.map((job) async {
         final username = await _jobService.fetchUsername(job.userId);
         if (username != null) {
           jobUsernames[job.userId] = username;
+        }
+
+        // Cari dokumen ID berdasarkan status "finished"
+        if (job.status == "finished") {
+          final documentId = await _firebaseService.getJobDocumentId(job.title);
+          if (documentId != null) {
+            // Ambil data link dari submission
+            final submissionData =
+                await _firebaseService.getSubmissionDataByJobId(documentId);
+            if (submissionData != null) {
+              jobLinks[job.title] = submissionData['link'] ?? 'No link';
+            }
+          }
         }
       }));
     } catch (e) {

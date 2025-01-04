@@ -9,8 +9,10 @@ class HomeView extends GetView<HomeController> {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 185, 224, 255),
       appBar: AppBar(
-        title: const Text('HomeView'),
-        centerTitle: true,
+        backgroundColor: Color(0xff016FCB),
+        title: Image.asset('assets/icons/demandtext.png'),
+        // title: const Text('HomeView', style: TextStyle(color: Colors.white)),
+        // centerTitle: true,
       ),
       body: GetX<HomeController>(
         init: HomeController(),
@@ -59,18 +61,18 @@ class HomeView extends GetView<HomeController> {
                                 Align(
                                   alignment: Alignment.centerRight,
                                   child: ElevatedButton(
-                                    onPressed: job.status == 'applied'
+                                    onPressed: (job.status == 'applied' || job.status == 'finished')
                                         ? null
                                         : () {
                                             controller.applyForJob(job.id);
                                           },
                                     style: ElevatedButton.styleFrom(
-                                      backgroundColor: job.status == 'applied'
+                                      backgroundColor: (job.status == 'applied' || job.status == 'finished')
                                           ? Colors.grey
                                           : Colors.blue,
                                     ),
-                                    child: Text(job.status == 'applied'
-                                        ? 'Applied'
+                                    child: Text((job.status == 'applied' || job.status == 'finished')
+                                        ? (job.status == 'applied' ? 'Applied' : 'Finished')
                                         : 'Apply'),
                                   ),
                                 ),

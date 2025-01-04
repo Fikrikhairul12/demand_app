@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:demand/app/data/models/home_model.dart';
 import 'package:demand/app/data/models/job_model.dart';
 import 'package:demand/app/data/models/license_model.dart';
+import 'package:demand/app/data/models/notification_model.dart';
 import 'package:intl/intl.dart';
 
 class FirebaseService {
@@ -26,6 +27,40 @@ class FirebaseService {
     } catch (e) {
       print("Error fetching license: $e");
       return false;
+    }
+  }
+
+  Future<String?> getJobDocumentId(String jobTitle) async {
+    try {
+      final querySnapshot = await _firestore
+          .collection('jobs')
+          .where('title', isEqualTo: jobTitle)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        return querySnapshot.docs.first.id; // Dokumen ID
+      }
+      return null;
+    } catch (e) {
+      print('Error fetching job document ID: $e');
+      return null;
+    }
+  }
+
+  Future<Map<String, dynamic>?> getSubmissionDataByJobId(String jobId) async {
+    try {
+      final querySnapshot = await _firestore
+          .collection('submission')
+          .where('jobId', isEqualTo: jobId)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        return querySnapshot.docs.first.data(); // Ambil data submission
+      }
+      return null;
+    } catch (e) {
+      print('Error fetching submission data: $e');
+      return null;
     }
   }
 }
@@ -254,5 +289,20 @@ class ApplicationService {
       print("Error saat memperbarui status job: $e");
       throw Exception("Error memperbarui status job.");
     }
+  }
+}
+
+class NotificationService {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  Stream<List<NotificationModel>> fetchNotifications(String userId) {
+    return _firestore
+        .collection('notifications')
+        .where('userId', isEqualTo: userId)
+        .orderBy('timestamp', descending: true)
+        .snapshots()
+        .map((query) => query.docs
+            .map((doc) => NotificationModel.fromFirestore(doc.data(), doc.id))
+            .toList());
   }
 }

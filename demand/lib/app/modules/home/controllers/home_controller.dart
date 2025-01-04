@@ -122,6 +122,14 @@ class HomeController extends GetxController {
         'apply_date': Timestamp.now(),
       });
 
+      // Kirim notifikasi ke pemilik job
+      await FirebaseFirestore.instance.collection('notifications').add({
+        'userId': jobOwnerId, // Pemilik job
+        'message': 'Job Anda telah dilamar oleh seorang freelancer.',
+        'type': 'Job',
+        'timestamp': Timestamp.now(),
+      });
+
       // Update data di controller
       final myJobController = Get.find<MyJobController>();
       await myJobController.fetchAppliedJobs();
