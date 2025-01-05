@@ -31,6 +31,8 @@ class AdminDashboardView extends GetView<AdminDashboardController> {
             ),
           ],
           bottom: const TabBar(
+            labelColor: Colors.white,
+            unselectedLabelColor: Colors.white70,
             tabs: [
               Tab(text: 'Licenses'),
               Tab(text: 'Users'),
@@ -164,9 +166,45 @@ class AdminDashboardView extends GetView<AdminDashboardController> {
             }),
 
             //TODO Tab 3: Jobs
-            const Center(
-              child: Text("Tab 3: Jobs"),
-            ),
+            Obx(() {
+              if (controller.isLoading.value) {
+                return const Center(child: CircularProgressIndicator());
+              }
+
+              if (controller.jobsList.isEmpty) {
+                return const Center(child: Text("No jobs found"));
+              }
+
+              return ListView.builder(
+                itemCount: controller.jobsList.length,
+                itemBuilder: (context, index) {
+                  final job = controller.jobsList[index];
+                  return Card(
+                    margin: const EdgeInsets.all(10),
+                    child: Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            job.title,
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 5),
+                          Text('Description: ${job.description}'),
+                          Text('Type: ${job.type}'),
+                          Text('Status: ${job.status}'),
+                          Text('Posted by: ${job.username}'),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              );
+            }),
           ],
         ),
       ),

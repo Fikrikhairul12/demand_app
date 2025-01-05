@@ -115,3 +115,34 @@ class Job {
   }
 }
 
+class DataJob {
+  final String jobId;
+  final String title;
+  final String description;
+  final String type;
+  final String status;
+  final String userId;
+  final String username; // Tambahkan properti username
+
+  DataJob({
+    required this.jobId,
+    required this.title,
+    required this.description,
+    required this.type,
+    required this.status,
+    required this.userId,
+    required this.username, // Tambahkan parameter username
+  });
+
+  factory DataJob.fromFirestore(Map<String, dynamic> data, String id, String username) {
+    return DataJob(
+      jobId: id,
+      title: data['title'] ?? '',
+      description: data['description'] ?? '',
+      type: data['jobType'] ?? '',
+      status: data['status'] ?? '',
+      userId: data['userId'] ?? '',
+      username: username, // Inisialisasi username
+    );
+  }
+}
