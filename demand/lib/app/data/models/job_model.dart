@@ -6,9 +6,9 @@ class JobModel {
   final String jobType;
   final String linkFile;
   final int price;
-  final String paymentMethod;
-  final String? virtualAccount;
-  final bool isPayment;
+  // final String paymentMethod;
+  // final String? virtualAccount;
+  // final bool isPayment;
   final DateTime createdAt;
   final String status;
 
@@ -20,9 +20,9 @@ class JobModel {
     required this.jobType,
     required this.linkFile,
     required this.price,
-    required this.paymentMethod,
-    this.virtualAccount,
-    required this.isPayment,
+    // required this.paymentMethod,
+    // this.virtualAccount,
+    // required this.isPayment,
     required this.createdAt,
     this.status = 'uploaded',
   });
@@ -36,9 +36,9 @@ class JobModel {
       'jobType': jobType,
       'price': price,
       'file': linkFile,
-      'paymentMethod': paymentMethod,
-      'virtualAccount': virtualAccount,
-      'isPayment': isPayment,
+      // 'paymentMethod': paymentMethod,
+      // 'virtualAccount': virtualAccount,
+      // 'isPayment': isPayment,
       'createdAt': createdAt.toIso8601String(),
       'status': status,
     };

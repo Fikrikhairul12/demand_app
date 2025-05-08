@@ -34,7 +34,8 @@ class PostJobView extends GetView<PostJobController> {
                     child: ElevatedButton(
                       onPressed: () async {
                         if (controller.validateStep3()) {
-                          await controller.completePayment();
+                          // await controller.completePayment();
+                          await controller.submitJob();
                         } else {
                           Get.snackbar(
                             'Error',
@@ -180,61 +181,61 @@ class PostJobView extends GetView<PostJobController> {
                     },
                   ),
                   const SizedBox(height: 20),
-                  Obx(
-                    () => DropdownButtonFormField<String>(
-                      decoration:
-                          const InputDecoration(labelText: 'Payment Method'),
-                      value: controller.paymentMethod.isEmpty
-                          ? null
-                          : controller.paymentMethod,
-                      items: controller.getPaymentMethods().map((method) {
-                        return DropdownMenuItem<String>(
-                          value: method,
-                          child: Text(method),
-                        );
-                      }).toList(),
-                      onChanged: (value) {
-                        controller.paymentMethod = value!;
-                        if (controller.jobType.value == 'Online' &&
-                            value == 'Tunai') {
-                          Get.snackbar(
-                            'Invalid Payment Method',
-                            'Cash payment is not available for online jobs.',
-                            snackPosition: SnackPosition.BOTTOM,
-                            backgroundColor: Colors.red,
-                            colorText: Colors.white,
-                          );
-                          controller.paymentMethod =
-                              ''; // Reset jika memilih "Tunai"
-                        }
-                      },
-                    ),
-                  ),
+                  // Obx(
+                  //   () => DropdownButtonFormField<String>(
+                  //     decoration:
+                  //         const InputDecoration(labelText: 'Payment Method'),
+                  //     value: controller.paymentMethod.isEmpty
+                  //         ? null
+                  //         : controller.paymentMethod,
+                  //     items: controller.getPaymentMethods().map((method) {
+                  //       return DropdownMenuItem<String>(
+                  //         value: method,
+                  //         child: Text(method),
+                  //       );
+                  //     }).toList(),
+                  //     onChanged: (value) {
+                  //       controller.paymentMethod = value!;
+                  //       if (controller.jobType.value == 'Online' &&
+                  //           value == 'Tunai') {
+                  //         Get.snackbar(
+                  //           'Invalid Payment Method',
+                  //           'Cash payment is not available for online jobs.',
+                  //           snackPosition: SnackPosition.BOTTOM,
+                  //           backgroundColor: Colors.red,
+                  //           colorText: Colors.white,
+                  //         );
+                  //         controller.paymentMethod =
+                  //             ''; // Reset jika memilih "Tunai"
+                  //       }
+                  //     },
+                  //   ),
+                  // ),
                   const SizedBox(height: 20),
                   // Display Virtual Account (Jika Tipe Online)
-                  Obx(() {
-                    if (controller.jobType.value == 'Online') {
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Virtual Account:',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          Text(controller.virtualAccount.value.isEmpty
-                              ? 'Not generated yet'
-                              : controller.virtualAccount.value),
-                          ElevatedButton(
-                            onPressed: () {
-                              controller.generateVirtualAccount();
-                            },
-                            child: const Text('Generate Virtual Account'),
-                          ),
-                        ],
-                      );
-                    }
-                    return const SizedBox.shrink();
-                  }),
+                  // Obx(() {
+                  //   if (controller.jobType.value == 'Online') {
+                  //     return Column(
+                  //       crossAxisAlignment: CrossAxisAlignment.start,
+                  //       children: [
+                  //         const Text(
+                  //           'Virtual Account:',
+                  //           style: TextStyle(fontWeight: FontWeight.bold),
+                  //         ),
+                  //         Text(controller.virtualAccount.value.isEmpty
+                  //             ? 'Not generated yet'
+                  //             : controller.virtualAccount.value),
+                  //         ElevatedButton(
+                  //           onPressed: () {
+                  //             controller.generateVirtualAccount();
+                  //           },
+                  //           child: const Text('Generate Virtual Account'),
+                  //         ),
+                  //       ],
+                  //     );
+                  //   }
+                  //   return const SizedBox.shrink();
+                  // }),
                 ],
               ),
             ),

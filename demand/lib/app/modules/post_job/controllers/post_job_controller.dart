@@ -22,24 +22,24 @@ class PostJobController extends GetxController {
   var jobType = ''.obs;
   String linkFile = '';
   int price = 0;
-  String paymentMethod = '';
-  final virtualAccount = ''.obs;
-  bool isPayment = false;
+  // String paymentMethod = '';
+  // final virtualAccount = ''.obs;
+  // bool isPayment = false;
 
-  Future<void> completePayment() async {
-    if (!isPayment) {
-      Get.defaultDialog(
-          title: "Payment",
-          middleText: "Please complete the payment first",
-          textConfirm: "OK",
-          onConfirm: () {
-            isPayment = true;
-            Get.back();
-          });
-    } else {
-      await submitJob();
-    }
-  }
+  // Future<void> completePayment() async {
+  //   if (!isPayment) {
+  //     Get.defaultDialog(
+  //         title: "Payment",
+  //         middleText: "Please complete the payment first",
+  //         textConfirm: "OK",
+  //         onConfirm: () {
+  //           isPayment = true;
+  //           Get.back();
+  //         });
+  //   } else {
+  //     await submitJob();
+  //   }
+  // }
 
   final List<String> jobCategories = [
     'IT & Software',
@@ -91,9 +91,9 @@ class PostJobController extends GetxController {
       jobType: jobType.value,
       price: price,
       linkFile: linkFile,
-      paymentMethod: paymentMethod,
-      virtualAccount: jobType.value == 'Online' ? virtualAccount.value : null,
-      isPayment: isPayment,
+      // paymentMethod: paymentMethod,
+      // virtualAccount: jobType.value == 'Online' ? virtualAccount.value : null,
+      // isPayment: isPayment,
       createdAt: DateTime.now(),
     );
 
@@ -118,14 +118,14 @@ class PostJobController extends GetxController {
     }
   }
 
-  void generateVirtualAccount() {
-    if (jobType.value == 'Online') {
-      virtualAccount.value = 'VA${DateTime.now().millisecondsSinceEpoch}';
-    }
-  }
+  // void generateVirtualAccount() {
+  //   if (jobType.value == 'Online') {
+  //     virtualAccount.value = 'VA${DateTime.now().millisecondsSinceEpoch}';
+  //   }
+  // }
 
   bool validateStep3() {
-    if (price > 0 && paymentMethod.isNotEmpty) {
+    if (price > 0) {
       return true;
     } else {
       Get.snackbar(
