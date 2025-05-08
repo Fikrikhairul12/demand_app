@@ -88,11 +88,6 @@ class MyJobView extends GetView<MyJobController> {
                                 children: [
                                   Text("Deskripsi: ${job.description}"),
                                   Text("Harga: Rp${job.price}"),
-                                  Text(
-                                      "Metode Pembayaran: ${job.paymentMethod}"),
-                                  if (job.virtualAccount != null)
-                                    Text(
-                                        "Virtual Account: ${job.virtualAccount}"),
                                   if (job.status == "finished" &&
                                       controller.jobLinks
                                           .containsKey(job.title))
@@ -208,11 +203,6 @@ class MyJobView extends GetView<MyJobController> {
                                         children: [
                                           Text("Deskripsi: ${job.description}"),
                                           Text("Harga: Rp${job.price}"),
-                                          Text(
-                                              "Metode Pembayaran: ${job.paymentMethod}"),
-                                          if (job.virtualAccount != null)
-                                            Text(
-                                                "Virtual Account: ${job.virtualAccount}"),
                                           const SizedBox(height: 10),
                                           Align(
                                             alignment: Alignment.centerRight,
