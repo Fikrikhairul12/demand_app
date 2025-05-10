@@ -64,16 +64,16 @@ class HomeView extends GetView<HomeController> {
                                     onPressed: (job.status == 'applied' || job.status == 'finished')
                                         ? null
                                         : () {
-                                            controller.applyForJob(job.id);
+                                            controller.showOfferDialog(job.id);
                                           },
                                     style: ElevatedButton.styleFrom(
-                                      backgroundColor: (job.status == 'applied' || job.status == 'finished')
+                                      backgroundColor: (job.status == 'ongoing' || job.status == 'finished')
                                           ? Colors.grey
                                           : Colors.blue,
                                     ),
-                                    child: Text((job.status == 'applied' || job.status == 'finished')
-                                        ? (job.status == 'applied' ? 'Applied' : 'Finished')
-                                        : 'Apply'),
+                                    child: Text((job.status == 'ongoing' || job.status == 'finished')
+                                        ? (job.status == 'ongoing' ? 'CLose' : 'Finished')
+                                        : 'Make Offer'),
                                   ),
                                 ),
                               ],

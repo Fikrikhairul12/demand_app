@@ -18,7 +18,7 @@ class JobModel {
     required this.linkFile,
     required this.price,
     required this.createdAt,
-    this.status = 'uploaded',
+    this.status = 'pending',
   });
 
   Map<String, dynamic> toMap() {

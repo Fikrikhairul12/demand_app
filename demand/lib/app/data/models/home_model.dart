@@ -16,7 +16,7 @@ class HomeModel {
     required this.description,
     required this.price,
     this.isExpanded = false,
-    this.status = 'uploaded',
+    this.status = 'pending',
   });
 
   // Fungsi untuk membuat HomeModel dari Firestore snapshot
@@ -28,7 +28,7 @@ class HomeModel {
       username: data['username'] ?? 'Unknown',
       description: data['description'] ?? 'No description', // Ambil deskripsi
       price: (data['price'] ?? 0).toDouble(), // Ambil harga dan ubah ke double
-      status: data['status'] ?? 'uploaded',
+      status: data['status'] ?? 'pending',
     );
   }
 }

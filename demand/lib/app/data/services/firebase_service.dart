@@ -175,7 +175,7 @@ class HomeService {
           description:
               doc['description'] ?? 'No description', // Ambil deskripsi
           price: (doc['price'] ?? 0).toDouble(), // Ambil harga
-          status: doc['status'] ?? 'uploaded',
+          status: doc['status'] ?? 'pending',
         );
       }));
 

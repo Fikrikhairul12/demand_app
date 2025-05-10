@@ -28,16 +28,13 @@ class HomeController extends GetxController {
     jobs.refresh();
   }
 
-  void applyForJob(String jobId) async {
+  void applyForJob(String jobId, double offer) async {
     try {
       final user = FirebaseAuth.instance.currentUser;
-      if (user == null) {
-        print("User not logged in.");
-        return;
-      }
+      if (user == null) return;
+
       String userId = user.uid;
 
-      // Cek lisensi user
       final userDoc = await FirebaseFirestore.instance
           .collection('users')
           .doc(userId)
@@ -49,49 +46,33 @@ class HomeController extends GetxController {
           middleText:
               'You cannot apply for this job because you do not have a license.',
           textConfirm: 'OK',
-          onConfirm: () {
-            Get.back();
-          },
+          onConfirm: () => Get.back(),
         );
         return;
       }
 
-      // Ambil data job
       final jobDoc =
           await FirebaseFirestore.instance.collection('jobs').doc(jobId).get();
 
-      if (!jobDoc.exists) {
-        print("Job tidak ditemukan.");
-        return;
-      }
+      if (!jobDoc.exists) return;
 
-      // Cek status job
       if (jobDoc['status'] == 'applied') {
-        Get.snackbar(
-          'Info',
-          'Job already applied by another user.',
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.orange,
-          colorText: Colors.white,
-        );
+        Get.snackbar('Info', 'Job already applied by another user.',
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Colors.orange,
+            colorText: Colors.white);
         return;
       }
 
-      // Cek apakah user melamar job milik sendiri
       String jobOwnerId = jobDoc['userId'] ?? '';
-
       if (userId == jobOwnerId) {
-        Get.snackbar(
-          'Error',
-          'You cannot apply for your own job.',
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
-        );
+        Get.snackbar('Error', 'You cannot apply for your own job.',
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Colors.red,
+            colorText: Colors.white);
         return;
       }
 
-      // Cek apakah user sudah melamar job ini
       final applicationsRef =
           FirebaseFirestore.instance.collection('applications');
       final querySnapshot = await applicationsRef
@@ -100,56 +81,41 @@ class HomeController extends GetxController {
           .get();
 
       if (querySnapshot.docs.isNotEmpty) {
-        Get.snackbar(
-          'Info',
-          'You have already applied for this job.',
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.orange,
-          colorText: Colors.white,
-        );
+        Get.snackbar('Info', 'You have already applied for this job.',
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Colors.orange,
+            colorText: Colors.white);
         return;
       }
 
-      // Update status job ke 'applied'
-      await FirebaseFirestore.instance.collection('jobs').doc(jobId).update({
-        'status': 'applied',
-      });
-
-      // Tambahkan aplikasi ke collection 'applications'
       await applicationsRef.add({
         'userId': userId,
         'jobId': jobId,
+        'offer': offer,
+        'status': 'pending',
         'apply_date': Timestamp.now(),
       });
 
-      // Kirim notifikasi ke pemilik job
       await FirebaseFirestore.instance.collection('notifications').add({
-        'userId': jobOwnerId, // Pemilik job
+        'userId': jobOwnerId,
         'message': 'Job Anda telah dilamar oleh seorang freelancer.',
         'type': 'Job',
         'timestamp': Timestamp.now(),
       });
 
-      // Update data di controller
       final myJobController = Get.find<MyJobController>();
       await myJobController.fetchAppliedJobs();
 
-      Get.snackbar(
-        'Success',
-        'You have successfully applied for this job.',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.green,
-        colorText: Colors.white,
-      );
+      Get.snackbar('Success', 'You have successfully applied for this job.',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.green,
+          colorText: Colors.white);
     } catch (e) {
       print("Error saat melamar: $e");
-      Get.snackbar(
-        'Error',
-        'An error occurred while applying for the job.',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+      Get.snackbar('Error', 'An error occurred while applying for the job.',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: Colors.white);
     }
   }
 
@@ -157,5 +123,39 @@ class HomeController extends GetxController {
   void onInit() {
     super.onInit();
     fetchJobs();
+  }
+
+  void showOfferDialog(String jobId) {
+    TextEditingController offerController = TextEditingController();
+
+    Get.defaultDialog(
+      title: 'Enter Your Offer',
+      content: Column(
+        children: [
+          TextField(
+            controller: offerController,
+            keyboardType: TextInputType.number,
+            decoration: InputDecoration(hintText: 'Enter your offer'),
+          ),
+        ],
+      ),
+      textConfirm: 'Submit',
+      textCancel: 'Cancel',
+      onConfirm: () {
+        final offer = double.tryParse(offerController.text);
+        if (offer != null) {
+          Get.back(); // tutup dialog
+          applyForJob(jobId, offer); // panggil applyForJob dengan offer
+        } else {
+          Get.snackbar(
+            'Invalid input',
+            'Please enter a valid number.',
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Colors.red,
+            colorText: Colors.white,
+          );
+        }
+      },
+    );
   }
 }
