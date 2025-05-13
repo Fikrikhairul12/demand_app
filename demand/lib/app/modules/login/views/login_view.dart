@@ -27,7 +27,7 @@ class LoginView extends GetView<LoginController> {
                   height: 300,
                   decoration: const BoxDecoration(
                     image: DecorationImage(
-                      image: AssetImage('assets/images/icon-demand.png'),
+                      image: AssetImage('assets/images/demand_png.png'),
                       fit: BoxFit.cover,
                     ),
                   ),

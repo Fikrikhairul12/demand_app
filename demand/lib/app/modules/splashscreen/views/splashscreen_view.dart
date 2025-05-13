@@ -24,7 +24,7 @@ class SplashscreenView extends GetView<SplashscreenController> {
                 height: 300,
                 decoration: const BoxDecoration(
                   image: DecorationImage(
-                    image: AssetImage('assets/images/icon-demand.png'),
+                    image: AssetImage('assets/images/demand_png.png'),
                     fit: BoxFit.cover,
                   ),
                 ),

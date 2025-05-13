@@ -2,6 +2,8 @@ import 'package:get/get.dart';
 
 import '../modules/admin_dashboard/bindings/admin_dashboard_binding.dart';
 import '../modules/admin_dashboard/views/admin_dashboard_view.dart';
+import '../modules/applicant/bindings/applicant_binding.dart';
+import '../modules/applicant/views/applicant_view.dart';
 import '../modules/application/bindings/application_binding.dart';
 import '../modules/application/views/application_view.dart';
 import '../modules/home/bindings/home_binding.dart';
@@ -113,6 +115,11 @@ class AppPages {
       name: _Paths.MAIN_NAVIGATION,
       page: () => MainNavigationView(),
       binding: MainNavigationBinding(),
+    ),
+    GetPage(
+      name: _Paths.APPLICANT,
+      page: () => const ApplicantView(),
+      binding: ApplicantBinding(),
     ),
   ];
 }

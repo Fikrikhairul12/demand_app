@@ -18,6 +18,7 @@ abstract class Routes {
   static const ADMIN_DASHBOARD = _Paths.ADMIN_DASHBOARD;
   static const LICENSE_APPLICATION = _Paths.LICENSE_APPLICATION;
   static const MAIN_NAVIGATION = _Paths.MAIN_NAVIGATION;
+  static const APPLICANT = _Paths.APPLICANT;
 }
 
 abstract class _Paths {
@@ -37,4 +38,5 @@ abstract class _Paths {
   static const ADMIN_DASHBOARD = '/admin-dashboard';
   static const LICENSE_APPLICATION = '/license-application';
   static const MAIN_NAVIGATION = '/main-navigation';
+  static const APPLICANT = '/applicant';
 }

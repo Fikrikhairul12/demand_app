@@ -28,28 +28,28 @@ class MainNavigationView extends GetView<MainNavigationController> {
           type: BottomNavigationBarType.shifting,
           currentIndex: controller.currentIndex.value,
           onTap: (index) => controller.changePage(index), // Gunakan function
-          selectedItemColor: Colors.white,
-          unselectedItemColor: Colors.grey,
+          selectedItemColor: const Color(0xff016FCB),
+          unselectedItemColor: Colors.black54,
           items: const [
             BottomNavigationBarItem(
-              icon: Icon(Icons.home),
+              icon: Icon(Icons.home_outlined),
               label: 'Beranda',
-              backgroundColor: Color(0xff016FCB),
+              backgroundColor: Colors.white,
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.assignment),
+              icon: Icon(Icons.assignment_outlined),
               label: 'Pekerjaan Saya',
-              backgroundColor: Color(0xff016FCB),
+              backgroundColor: Colors.white,
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.notifications),
+              icon: Icon(Icons.notifications_none_outlined),
               label: 'Notifikasi',
-              backgroundColor: Color(0xff016FCB),
+              backgroundColor: Colors.white,
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.account_circle),
+              icon: Icon(Icons.account_circle_outlined),
               label: 'Akun',
-              backgroundColor: Color(0xff016FCB),
+              backgroundColor: Colors.white,
             ),
           ],
         ),

@@ -26,19 +26,19 @@ class OnboardingView extends GetView<OnboardingController> {
                     title: 'Temukan Peluang Kerja Terbaik',
                     description:
                         'Dengan demand.id, Anda dapat mencari pekerjaan dan pengalaman yang sesuai dengan keahlian Anda, baik sebagai freelancer maupun pekerjaan tetap. Tunggu apa lagi, ribuan peluang menunggu Anda!',
-                    imagePath: 'assets/images/icon-demand.png', // Ganti dengan gambar yang relevan
+                    imagePath: 'assets/images/demand_png.png', // Ganti dengan gambar yang relevan
                   ),
                   onboardingPage(
                     title: 'Hubungkan Klien dan Freelancer',
                     description:
                         'Kami menghubungkan Anda dengan klien atau freelancer terbaik di bidangnya. Mulailah proyek dengan sistem pembayaran yang aman',
-                    imagePath: 'assets/images/icon-demand.png', // Ganti dengan gambar yang relevan
+                    imagePath: 'assets/images/demand_png.png', // Ganti dengan gambar yang relevan
                   ),
                   onboardingPage(
                     title: 'Raih Kesempatan, Wujudkan Impian',
                     description:
                         'Demand.Id adalah langkah awal untuk kesuksesan Anda. Dapatkan pekerjaan impian Anda, atau rekrut freelancer profesional untuk mewujudkan proyek Anda.',
-                    imagePath: 'assets/images/icon-demand.png', // Ganti dengan gambar yang relevan
+                    imagePath: 'assets/images/demand_png.png', // Ganti dengan gambar yang relevan
                   ),
                 ],
               ),

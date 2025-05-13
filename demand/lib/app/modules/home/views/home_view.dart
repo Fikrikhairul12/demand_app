@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../controllers/home_controller.dart';
 
 class HomeView extends GetView<HomeController> {
@@ -7,10 +8,17 @@ class HomeView extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 185, 224, 255),
+      backgroundColor: Colors.white,
+      // backgroundColor: const Color.fromARGB(255, 185, 224, 255),
       appBar: AppBar(
-        backgroundColor: Color(0xff016FCB),
-        title: Image.asset('assets/icons/demandtext.png'),
+        backgroundColor: Colors.white,
+        // backgroundColor: Color(0xff016FCB),
+        // title: Image.asset('assets/icons/demandtext.png'),
+        title: Text('Demand',
+            style: GoogleFonts.jomhuria(
+                color: Color(0xff016fcb),
+                fontSize: 48,
+                fontWeight: FontWeight.w400)),
         // title: const Text('HomeView', style: TextStyle(color: Colors.white)),
         // centerTitle: true,
       ),
@@ -61,18 +69,24 @@ class HomeView extends GetView<HomeController> {
                                 Align(
                                   alignment: Alignment.centerRight,
                                   child: ElevatedButton(
-                                    onPressed: (job.status == 'applied' || job.status == 'finished')
+                                    onPressed: (job.status == 'applied' ||
+                                            job.status == 'finished')
                                         ? null
                                         : () {
                                             controller.showOfferDialog(job.id);
                                           },
                                     style: ElevatedButton.styleFrom(
-                                      backgroundColor: (job.status == 'ongoing' || job.status == 'finished')
-                                          ? Colors.grey
-                                          : Colors.blue,
+                                      backgroundColor:
+                                          (job.status == 'ongoing' ||
+                                                  job.status == 'finished')
+                                              ? Colors.grey
+                                              : Colors.blue,
                                     ),
-                                    child: Text((job.status == 'ongoing' || job.status == 'finished')
-                                        ? (job.status == 'ongoing' ? 'CLose' : 'Finished')
+                                    child: Text((job.status == 'ongoing' ||
+                                            job.status == 'finished')
+                                        ? (job.status == 'ongoing'
+                                            ? 'CLose'
+                                            : 'Finished')
                                         : 'Make Offer'),
                                   ),
                                 ),

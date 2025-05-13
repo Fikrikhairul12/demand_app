@@ -131,10 +131,38 @@ class JobService {
       final querySnapshot = await _firestore
           .collection('applications')
           .where('userId', isEqualTo: userId)
-          .get();
+          .where('status', isEqualTo: 'accepted')
+          .get(const GetOptions(source: Source.server));
+
+      if (querySnapshot.docs.isEmpty) {
+        print('Tidak ada data dengan status accepted.');
+      }
+
+      // Debug log semua dokumen yg ditemukan
+      for (var doc in querySnapshot.docs) {
+        print('Doc ID: ${doc.id} => Data: ${doc.data()}');
+      }
+
       return querySnapshot.docs.map((doc) => doc.data()).toList();
     } catch (e) {
-      throw Exception('Failed to fetch applications: $e');
+      print('🔥 Error saat fetch: $e');
+
+      // Tambahan fallback: ambil semua data user (tanpa filter status)
+      try {
+        final fallbackSnapshot = await _firestore
+            .collection('applications')
+            .where('userId', isEqualTo: userId)
+            .get();
+
+        for (var doc in fallbackSnapshot.docs) {
+          final data = doc.data();
+          print("🔍 Fallback cek status: ${data['status']} | docId: ${doc.id}");
+        }
+
+        return [];
+      } catch (fallbackError) {
+        throw Exception('Fallback fetch error: $fallbackError');
+      }
     }
   }
 
