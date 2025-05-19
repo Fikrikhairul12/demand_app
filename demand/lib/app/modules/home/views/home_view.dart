@@ -69,11 +69,11 @@ class HomeView extends GetView<HomeController> {
                                 Align(
                                   alignment: Alignment.centerRight,
                                   child: ElevatedButton(
-                                    onPressed: (job.status == 'applied' ||
+                                    onPressed: (job.status == 'ongoing' ||
                                             job.status == 'finished')
                                         ? null
                                         : () {
-                                            controller.showOfferDialog(job.id);
+                                            controller.checkBeforeOffer(job.id);
                                           },
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor:
@@ -85,7 +85,7 @@ class HomeView extends GetView<HomeController> {
                                     child: Text((job.status == 'ongoing' ||
                                             job.status == 'finished')
                                         ? (job.status == 'ongoing'
-                                            ? 'CLose'
+                                            ? 'Close'
                                             : 'Finished')
                                         : 'Make Offer'),
                                   ),

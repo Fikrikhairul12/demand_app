@@ -56,7 +56,7 @@ class HomeController extends GetxController {
 
       if (!jobDoc.exists) return;
 
-      if (jobDoc['status'] == 'applied') {
+      if (jobDoc['status'] == 'ongoing') {
         Get.snackbar('Info', 'Job already applied by another user.',
             snackPosition: SnackPosition.BOTTOM,
             backgroundColor: Colors.orange,
@@ -99,7 +99,8 @@ class HomeController extends GetxController {
       await FirebaseFirestore.instance.collection('notifications').add({
         'userId': jobOwnerId,
         'message': 'Job Anda telah dilamar oleh seorang freelancer.',
-        'type': 'Job',
+        'title' : 'Job',
+        'type': 'info',
         'timestamp': Timestamp.now(),
       });
 
@@ -157,5 +158,76 @@ class HomeController extends GetxController {
         }
       },
     );
+  }
+
+  void checkBeforeOffer(String jobId) async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) return;
+
+      String userId = user.uid;
+
+      final userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .get();
+
+      if (!userDoc.exists || !(userDoc['license'] ?? false)) {
+        Get.defaultDialog(
+          title: 'License Required',
+          middleText:
+              'You cannot apply for this job because you do not have a license.',
+          textConfirm: 'OK',
+          onConfirm: () => Get.back(),
+        );
+        return;
+      }
+
+      final jobDoc =
+          await FirebaseFirestore.instance.collection('jobs').doc(jobId).get();
+
+      if (!jobDoc.exists) return;
+
+      if (jobDoc['status'] == 'ongoing' || jobDoc['status'] == 'finished') {
+        Get.snackbar('Info', 'Job sudah tidak tersedia.',
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Colors.orange,
+            colorText: Colors.white);
+        return;
+      }
+
+      String jobOwnerId = jobDoc['userId'] ?? '';
+      if (userId == jobOwnerId) {
+        Get.snackbar('Error', 'You cannot apply for your own job.',
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Colors.red,
+            colorText: Colors.white);
+        return;
+      }
+
+      final applicationsRef =
+          FirebaseFirestore.instance.collection('applications');
+      final querySnapshot = await applicationsRef
+          .where('userId', isEqualTo: userId)
+          .where('jobId', isEqualTo: jobId)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        Get.snackbar('Info', 'You have already applied for this job.',
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Colors.orange,
+            colorText: Colors.white);
+        return;
+      }
+
+      // ✅ Lolos semua validasi, lanjut tampilkan dialog
+      showOfferDialog(jobId);
+    } catch (e) {
+      print("Error saat memeriksa job: $e");
+      Get.snackbar('Error', 'Terjadi kesalahan saat memeriksa job.',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: Colors.white);
+    }
   }
 }

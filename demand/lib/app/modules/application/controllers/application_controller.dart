@@ -92,9 +92,10 @@ class ApplicationController extends GetxController {
       // Tambahkan notifikasi
       final notificationData = {
         'userId': userId, // Current user ID
+        'title' : "payment",
         'message':
             'Pembayaran telah diterima, silahkan cek pada rekening anda!',
-        'type': 'Payment',
+        'type': 'info',
         'timestamp': Timestamp.now(),
       };
 

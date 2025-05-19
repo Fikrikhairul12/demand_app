@@ -47,6 +47,57 @@ class FirebaseService {
     }
   }
 
+  Future<List<Map<String, dynamic>>> fetchApplicationsByJobIdWithDocId(
+      String jobId) async {
+    try {
+      final querySnapshot = await _firestore
+          .collection('applications')
+          .where('jobId', isEqualTo: jobId)
+          .get();
+
+      final List<Map<String, dynamic>> applications =
+          querySnapshot.docs.map((doc) {
+        return {
+          'docId': doc.id,
+          'data': doc.data(),
+        };
+      }).toList();
+
+      // Debug log
+      for (var app in applications) {
+        print("📄 Application docId: ${app['docId']}, Data: ${app['data']}");
+      }
+
+      return applications;
+    } catch (e) {
+      print('🔥 Error fetching applications with docId: $e');
+      return [];
+    }
+  }
+
+// Ambil dokumen aplikasi berdasarkan docId
+  Future<Map<String, dynamic>?> getApplicationById(String docId) async {
+    final snapshot =
+        await _firestore.collection('applications').doc(docId).get();
+    if (snapshot.exists) {
+      return snapshot.data();
+    }
+    return null;
+  }
+
+// Update aplikasi dengan data tertentu
+  Future<void> updateApplicationStatus({
+    required String docId,
+    required Map<String, dynamic> data,
+  }) async {
+    await _firestore.collection('applications').doc(docId).update(data);
+  }
+
+// Tambah data ke koleksi notifications
+  Future<void> addNotification(Map<String, dynamic> notificationData) async {
+    await _firestore.collection('notifications').add(notificationData);
+  }
+
   Future<Map<String, dynamic>?> getSubmissionDataByJobId(String jobId) async {
     try {
       final querySnapshot = await _firestore
@@ -60,6 +111,16 @@ class FirebaseService {
       return null;
     } catch (e) {
       print('Error fetching submission data: $e');
+      return null;
+    }
+  }
+
+  Future<Map<String, dynamic>?> fetchUserData(String userId) async {
+    try {
+      final doc = await _firestore.collection('users').doc(userId).get();
+      return doc.exists ? doc.data() : null;
+    } catch (e) {
+      print('Error fetching user data: $e');
       return null;
     }
   }

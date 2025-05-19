@@ -32,7 +32,7 @@ class MyJobView extends GetView<MyJobController> {
           child: controller.jobs.isEmpty
               ? ListView(
                   // Agar bisa ditarik walau kosong
-                  children: [
+                  children: const [
                     SizedBox(height: 200),
                     Center(child: Text("Kamu belum membuat job!")),
                   ],
@@ -43,6 +43,7 @@ class MyJobView extends GetView<MyJobController> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      //TODO: history job
                       const Padding(
                         padding: EdgeInsets.all(16.0),
                         child: Text(
@@ -96,6 +97,19 @@ class MyJobView extends GetView<MyJobController> {
                                         children: [
                                           Text("Deskripsi: ${job.description}"),
                                           Text("Harga: Rp${job.price}"),
+                                          if (job.status == 'pending')
+                                            Align(
+                                              alignment: Alignment.centerRight,
+                                              child: ElevatedButton(
+                                                onPressed: () {
+                                                  // output log docId
+                                                  Get.toNamed('/applicant', arguments: job);
+                                                  print("Job title: ${job.title}");
+                                                },
+                                                child: const Text(
+                                                    "View Applicants"),
+                                              ),
+                                            ),
                                           if (job.status == "finished" &&
                                               controller.jobLinks
                                                   .containsKey(job.title))
@@ -142,7 +156,7 @@ class MyJobView extends GetView<MyJobController> {
                           );
                         },
                       ),
-                      // Bagian Lamar Job
+                      //TODO: Bagian Lamar Job
                       if (controller.hasLicense.value) ...[
                         const Padding(
                           padding: EdgeInsets.symmetric(
@@ -258,6 +272,16 @@ class MyJobView extends GetView<MyJobController> {
                 ),
         );
       }),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 30, right: 30),
+        child: FloatingActionButton(
+          onPressed: () {
+            Get.toNamed('/post-job');
+          },
+          backgroundColor: Colors.blue,
+          child: const Icon(Icons.add),
+        ),
+      ),
     );
   }
 }

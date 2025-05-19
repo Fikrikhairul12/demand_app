@@ -1,23 +1,84 @@
+import 'package:demand/app/data/models/job_model.dart';
+import 'package:demand/app/data/services/firebase_service.dart';
 import 'package:get/get.dart';
 
 class ApplicantController extends GetxController {
-  //TODO: Implement ApplicantController
+  late Job job;
+  final FirebaseService _firebaseService = FirebaseService();
+  var applicants = <Map<String, dynamic>>[].obs;
 
-  final count = 0.obs;
   @override
   void onInit() {
     super.onInit();
+    job = Get.arguments;
+
+    _fetchApplicantsWithUserData();
   }
 
-  @override
-  void onReady() {
-    super.onReady();
+  void _fetchApplicantsWithUserData() async {
+    final jobId = await _firebaseService.getJobDocumentId(job.title);
+    if (jobId != null) {
+      final applications =
+          await _firebaseService.fetchApplicationsByJobIdWithDocId(jobId);
+
+      final List<Map<String, dynamic>> result = [];
+
+      for (var app in applications) {
+        final userId = app['data']['userId'];
+        final userData = await _firebaseService.fetchUserData(userId);
+
+        if (userData != null) {
+          result.add({
+            'docId': app['docId'],
+            'username': userData['username'] ?? 'Unknown',
+            'profilePicture': userData['profilePicture'] ?? null,
+            'offerPrice': app['data']['offer'],
+            'status': app['data']['status'],
+          });
+        }
+      }
+      applicants.assignAll(result);
+    } else {
+      print("❌ Job ID tidak ditemukan untuk title: ${job.title}");
+    }
   }
 
-  @override
-  void onClose() {
-    super.onClose();
-  }
+  void updateApplication(String applicationId) async {
+    print("🔁 Proses update aplikasi...");
 
-  void increment() => count.value++;
+    try {
+      // Ambil detail aplikasi dari docId
+      final applicationDoc =
+          await _firebaseService.getApplicationById(applicationId);
+      if (applicationDoc == null) {
+        print("❌ Aplikasi dengan ID $applicationId tidak ditemukan");
+        return;
+      }
+
+      final userId = applicationDoc['userId'];
+      final now = DateTime.now();
+
+      // 1. Update field status dan selectedAt di koleksi applications
+      await _firebaseService.updateApplicationStatus(
+        docId: applicationId,
+        data: {
+          'status': 'selected',
+          'selectedAt': now,
+        },
+      );
+
+      // 2. Tambahkan notifikasi ke koleksi notifications
+      await _firebaseService.addNotification({
+        'message': 'Selamat! Lamaranmu telah diterima.',
+        'userId': userId,
+        'timestamp': now,
+        'title': job.title,
+        'type': 'action',
+      });
+
+      print("✅ Aplikasi berhasil diupdate dan notifikasi dikirim!");
+    } catch (e) {
+      print("❌ Gagal update aplikasi: $e");
+    }
+  }
 }
