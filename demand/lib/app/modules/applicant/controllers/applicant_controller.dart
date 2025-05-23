@@ -1,5 +1,6 @@
 import 'package:demand/app/data/models/job_model.dart';
 import 'package:demand/app/data/services/firebase_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 
 class ApplicantController extends GetxController {
@@ -58,6 +59,13 @@ class ApplicantController extends GetxController {
       final userId = applicationDoc['userId'];
       final now = DateTime.now();
 
+      final currentUser = FirebaseAuth.instance.currentUser;
+      final currentUserId = currentUser?.uid;
+
+      final currentUserData =
+          await _firebaseService.fetchUserData('$currentUserId');
+      final currentUsername = currentUserData?['username'] ?? 'Pengguna';
+
       // 1. Update field status dan selectedAt di koleksi applications
       await _firebaseService.updateApplicationStatus(
         docId: applicationId,
@@ -69,13 +77,15 @@ class ApplicantController extends GetxController {
 
       // 2. Tambahkan notifikasi ke koleksi notifications
       await _firebaseService.addNotification({
-        'message': 'Selamat! Lamaranmu telah diterima.',
+        'message': '$currentUsername menyetujui tawaran anda "${job.title}"',
         'userId': userId,
         'timestamp': now,
-        'title': job.title,
-        'type': 'action',
+        'type': 'Accepted',
+        'appId': applicationId,
+        'status': 'pending',
       });
 
+      
       print("✅ Aplikasi berhasil diupdate dan notifikasi dikirim!");
     } catch (e) {
       print("❌ Gagal update aplikasi: $e");

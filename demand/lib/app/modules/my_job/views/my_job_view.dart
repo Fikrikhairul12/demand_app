@@ -103,11 +103,26 @@ class MyJobView extends GetView<MyJobController> {
                                               child: ElevatedButton(
                                                 onPressed: () {
                                                   // output log docId
-                                                  Get.toNamed('/applicant', arguments: job);
-                                                  print("Job title: ${job.title}");
+                                                  Get.toNamed('/applicant',
+                                                      arguments: job);
+                                                  print(
+                                                      "Job title: ${job.title}");
                                                 },
                                                 child: const Text(
                                                     "View Applicants"),
+                                              ),
+                                            ),
+                                          if (job.status == 'waiting')
+                                            Align(
+                                              alignment: Alignment.centerRight,
+                                              child: ElevatedButton(
+                                                onPressed: () {
+                                                  // output log docId
+                                                  Get.toNamed('/payment',
+                                                      arguments: job);
+                                                },
+                                                child: const Text(
+                                                    "Pembayaran"),
                                               ),
                                             ),
                                           if (job.status == "finished" &&
@@ -176,96 +191,112 @@ class MyJobView extends GetView<MyJobController> {
                             ),
                           )
                         else
-                          Obx(() => ListView.builder(
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                itemCount: controller.appliedJobs.length,
-                                itemBuilder: (context, index) {
-                                  final job = controller.appliedJobs[index];
-                                  final username =
-                                      controller.jobUsernames[job.userId] ??
-                                          "Unknown User";
+                          Obx(() {
+                            final filteredJobs = controller.appliedJobs
+                                .where((job) =>
+                                    job.status == 'ongoing' ||
+                                    job.status == 'finished')
+                                .toList();
 
-                                  return GestureDetector(
-                                    onTap: () => controller
-                                        .toggleAppliedJobExpansion(index),
-                                    child: Card(
-                                      margin: const EdgeInsets.symmetric(
-                                          horizontal: 16, vertical: 8),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(12.0),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            ListTile(
-                                              contentPadding: EdgeInsets.zero,
-                                              title: Text(
-                                                job.title,
-                                                style: const TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
-                                              subtitle: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                      "Dibuat oleh: $username"),
-                                                  Text(
-                                                      "Kategori: ${job.category}"),
-                                                  Text("Tipe: ${job.jobType}"),
-                                                  Text(
-                                                      "Dibuat: ${job.createdAt}"),
-                                                ],
-                                              ),
+                            if (filteredJobs.isEmpty) {
+                              return const Padding(
+                                padding: EdgeInsets.all(16.0),
+                                child: Text(
+                                  "Belum ada history job yang sedang atau telah selesai.",
+                                  style: TextStyle(fontSize: 16),
+                                ),
+                              );
+                            }
+
+                            return ListView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: filteredJobs.length,
+                              itemBuilder: (context, index) {
+                                final job = filteredJobs[index];
+                                final username =
+                                    controller.jobUsernames[job.userId] ??
+                                        "Unknown User";
+
+                                return GestureDetector(
+                                  onTap: () => controller
+                                      .toggleAppliedJobExpansion(index),
+                                  child: Card(
+                                    margin: const EdgeInsets.symmetric(
+                                        horizontal: 16, vertical: 8),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(12.0),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          ListTile(
+                                            contentPadding: EdgeInsets.zero,
+                                            title: Text(
+                                              job.title,
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold),
                                             ),
-                                            if (controller
-                                                .isAppliedJobExpanded(index))
-                                              Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                      "Deskripsi: ${job.description}"),
-                                                  Text("Harga: Rp${job.price}"),
-                                                  const SizedBox(height: 10),
-                                                  Align(
-                                                    alignment:
-                                                        Alignment.centerRight,
-                                                    child: ElevatedButton(
-                                                      onPressed: job.status ==
-                                                              'finished'
-                                                          ? null
-                                                          : () {
-                                                              Get.toNamed(
-                                                                  '/application',
-                                                                  arguments:
-                                                                      job);
-                                                            },
-                                                      style: ElevatedButton
-                                                          .styleFrom(
-                                                        backgroundColor:
-                                                            job.status ==
-                                                                    'finished'
-                                                                ? Colors.grey
-                                                                : Colors.blue,
-                                                      ),
-                                                      child: Text(job.status ==
-                                                              'finished'
+                                            subtitle: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text("Dibuat oleh: $username"),
+                                                Text(
+                                                    "Kategori: ${job.category}"),
+                                                Text("Tipe: ${job.jobType}"),
+                                                Text(
+                                                    "Dibuat: ${job.createdAt}"),
+                                              ],
+                                            ),
+                                          ),
+                                          if (controller
+                                              .isAppliedJobExpanded(index))
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                    "Deskripsi: ${job.description}"),
+                                                Text("Harga: Rp${job.price}"),
+                                                const SizedBox(height: 10),
+                                                Align(
+                                                  alignment:
+                                                      Alignment.centerRight,
+                                                  child: ElevatedButton(
+                                                    onPressed: job.status ==
+                                                            'finished'
+                                                        ? null
+                                                        : () {
+                                                            Get.toNamed(
+                                                                '/application',
+                                                                arguments: job);
+                                                          },
+                                                    style: ElevatedButton
+                                                        .styleFrom(
+                                                      backgroundColor:
+                                                          job.status ==
+                                                                  'finished'
+                                                              ? Colors.grey
+                                                              : Colors.blue,
+                                                    ),
+                                                    child: Text(
+                                                      job.status == 'finished'
                                                           ? 'Selesai'
-                                                          : 'Kerjakan'),
+                                                          : 'Kerjakan',
                                                     ),
                                                   ),
-                                                ],
-                                              ),
-                                          ],
-                                        ),
+                                                ),
+                                              ],
+                                            ),
+                                        ],
                                       ),
                                     ),
-                                  );
-                                },
-                              )),
+                                  ),
+                                );
+                              },
+                            );
+                          }),
                       ],
                     ],
                   ),

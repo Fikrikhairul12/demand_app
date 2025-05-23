@@ -6,6 +6,8 @@ class NotificationModel {
   final String message;
   final String type;
   final DateTime timestamp;
+  final String appId;
+  final String status;
 
   NotificationModel({
     required this.id,
@@ -13,6 +15,8 @@ class NotificationModel {
     required this.message,
     required this.type,
     required this.timestamp,
+    required this.appId,
+    required this.status,
   });
 
   factory NotificationModel.fromFirestore(Map<String, dynamic> data, String id) {
@@ -24,6 +28,8 @@ class NotificationModel {
       timestamp: (data['timestamp'] != null && data['timestamp'] is Timestamp)
         ? (data['timestamp'] as Timestamp).toDate()
         : DateTime.now(),
+      appId: data['appId'] ?? '',
+      status: data['status'] ?? '',
     );
   }
 }

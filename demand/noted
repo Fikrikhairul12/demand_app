@@ -31,5 +31,6 @@ oke gw buat langkahny trus ama code ny biar lngsung lu bikin.
 5. set timer 10 mnt (coba aja dlu pake 30 dtk bwt percobaan) setelah berhasil update applications bwt data yang di update statusny. (tampilkan countdown di debug console)
 6. update status = 'rejected' jika timer sudah habis.
 7. hilangkan tombol accept and reject jika status applications selain pending.
+8. modifikasi notif bwt koleksi notification type 'action' punya tombol 'confirm' and 'cancel'.
 
 lu mau mulai dri mn? gw kasih code gw bwt lu modifikasi.

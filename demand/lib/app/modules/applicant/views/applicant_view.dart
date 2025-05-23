@@ -20,7 +20,8 @@ class ApplicantView extends GetView<ApplicantController> {
           children: [
             Text(
               "${controller.job.title}",
-              style: GoogleFonts.inter(fontSize: 15, fontWeight: FontWeight.w600),
+              style:
+                  GoogleFonts.inter(fontSize: 15, fontWeight: FontWeight.w600),
             ),
             Obx(() {
               if (controller.applicants.isEmpty) {
@@ -96,35 +97,62 @@ class ApplicantView extends GetView<ApplicantController> {
                           const SizedBox(height: 12),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              OutlinedButton(
-                                onPressed: () {
-                                  controller.updateApplication(applicant['docId']);
-                                },
-                                style: OutlinedButton.styleFrom(
-                                  side: const BorderSide(color: Colors.green),
-                                  minimumSize: const Size(90, 30),
-                                ),
-                                child: const Text(
-                                  "accept",
-                                  style: TextStyle(color: Colors.green),
-                                ),
-                              ),
-                              const SizedBox(width: 8),
-                              OutlinedButton(
-                                onPressed: () {
-                                  print("tombol reject ditekan");
-                                },
-                                style: OutlinedButton.styleFrom(
-                                  side: const BorderSide(color: Colors.red),
-                                  minimumSize: const Size(90, 30),
-                                ),
-                                child: const Text(
-                                  "reject",
-                                  style: TextStyle(color: Colors.red),
-                                ),
-                              ),
-                            ],
+                            children: () {
+                              final status = applicant['status'] ?? 'pending';
+
+                              if (status == 'pending') {
+                                return [
+                                  OutlinedButton(
+                                    onPressed: () {
+                                      controller.updateApplication(
+                                          applicant['docId']);
+                                    },
+                                    style: OutlinedButton.styleFrom(
+                                      side:
+                                          const BorderSide(color: Colors.green),
+                                      minimumSize: const Size(90, 30),
+                                    ),
+                                    child: const Text(
+                                      "accept",
+                                      style: TextStyle(color: Colors.green),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  OutlinedButton(
+                                    onPressed: () {
+                                      print("tombol reject ditekan");
+                                    },
+                                    style: OutlinedButton.styleFrom(
+                                      side: const BorderSide(color: Colors.red),
+                                      minimumSize: const Size(90, 30),
+                                    ),
+                                    child: const Text(
+                                      "reject",
+                                      style: TextStyle(color: Colors.red),
+                                    ),
+                                  ),
+                                ];
+                              } else if (status == 'selected') {
+                                return [
+                                  Text(
+                                    "waiting for applicant response within 10 m",
+                                    style: GoogleFonts.inter(
+                                        color: Colors.red,
+                                        fontWeight: FontWeight.w300,
+                                        fontSize: 10),
+                                  )
+                                ];
+                              } else {
+                                return [
+                                  const Text(
+                                    "accepted",
+                                    style: TextStyle(
+                                        color: Colors.green,
+                                        fontWeight: FontWeight.w600),
+                                  )
+                                ];
+                              }
+                            }(),
                           ),
                         ],
                       ),
