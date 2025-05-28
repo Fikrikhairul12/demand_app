@@ -5,7 +5,7 @@ lib/
 │   |    ├── models/
 |   |    └── services/
 │   ├── modules/
-│   |    └── applicant/
+│   |    └── payment/
 │   |        ├── bindings/
 │   |        ├── controller/
 │   |        └── view/
@@ -14,23 +14,4 @@ lib/
 │
 └── main.dart
 
-waduh mulai ngaco nih. gini deh.
-
-* save timestamp client accept freelance n reject after 10 mnt
-
-1. tambahin field baru dikoleksi application  "selectedAt" yg isiny kpn client accept lamaran freelance
-2. trigger point countdown 10 mnt dgn selectedAt
-3. pake (Timer.periodic) bwt logika 10 mnt auto reject
-
-oke gw buat langkahny trus ama code ny biar lngsung lu bikin.
-
-1. dapetin dlu docid tiap applications yang terlibat. ✅
-2. bikin method update applications jika menekan tombol 'accept' maka akn menjalankan method.
-3. isi method ny update field status = 'selected'. tambah field selectedAt dgn waktu saat ini.
-4. dan juga di dlm method yg sama, membuat data masukkan ke koleksi notifications dgn field : message, userId (sama dengan userId di applications), timestamp, title = (nama job yang dilamar), type = 'action'.
-5. set timer 10 mnt (coba aja dlu pake 30 dtk bwt percobaan) setelah berhasil update applications bwt data yang di update statusny. (tampilkan countdown di debug console)
-6. update status = 'rejected' jika timer sudah habis.
-7. hilangkan tombol accept and reject jika status applications selain pending.
-8. modifikasi notif bwt koleksi notification type 'action' punya tombol 'confirm' and 'cancel'.
-
-lu mau mulai dri mn? gw kasih code gw bwt lu modifikasi.
+buat method untuk tombol submit yang isinya adalah buat koleksi baru namanya payment yang isi field nya adalah userId (current user), jobId, price (harga penawaran), bukti_foto

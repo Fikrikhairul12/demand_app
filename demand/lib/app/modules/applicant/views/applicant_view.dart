@@ -106,6 +106,15 @@ class ApplicantView extends GetView<ApplicantController> {
                                     onPressed: () {
                                       controller.updateApplication(
                                           applicant['docId']);
+                                      Get.back();
+                                      Get.snackbar(
+                                        'Berhasil',
+                                        'Kamu telah memilih freelancer untuk job ini.',
+                                        snackPosition: SnackPosition.BOTTOM,
+                                        backgroundColor: Colors.green,
+                                        colorText: Colors.white,
+                                        duration: const Duration(seconds: 2),
+                                      );
                                     },
                                     style: OutlinedButton.styleFrom(
                                       side:

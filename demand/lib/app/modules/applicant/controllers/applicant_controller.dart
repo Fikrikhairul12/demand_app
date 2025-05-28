@@ -1,6 +1,7 @@
 import 'package:demand/app/data/models/job_model.dart';
 import 'package:demand/app/data/services/firebase_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class ApplicantController extends GetxController {
@@ -85,7 +86,6 @@ class ApplicantController extends GetxController {
         'status': 'pending',
       });
 
-      
       print("✅ Aplikasi berhasil diupdate dan notifikasi dikirim!");
     } catch (e) {
       print("❌ Gagal update aplikasi: $e");
