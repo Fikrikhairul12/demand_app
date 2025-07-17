@@ -49,12 +49,6 @@ class ProfileView extends GetView<ProfileController> {
                   Container(
                     height: 100,
                     color: const Color(0xff016FCB),
-                    child: Center(
-                      child: Text(
-                        'bAckground gambar',
-                        style: GoogleFonts.lexend(color: Colors.white),
-                      ),
-                    ),
                   ),
                   Positioned(
                     bottom: -50,
@@ -122,10 +116,8 @@ class ProfileView extends GetView<ProfileController> {
                     children: [
                       Container(
                         decoration: BoxDecoration(
-                          border: Border.all(
-                              color: Colors.black),
-                          borderRadius:
-                              BorderRadius.circular(50),
+                          border: Border.all(color: Colors.black),
+                          borderRadius: BorderRadius.circular(50),
                         ),
                         child: TextButton.icon(
                           onPressed: null,
@@ -138,10 +130,8 @@ class ProfileView extends GetView<ProfileController> {
                       ),
                       Container(
                         decoration: BoxDecoration(
-                          border: Border.all(
-                              color: Colors.black),
-                          borderRadius:
-                              BorderRadius.circular(50),
+                          border: Border.all(color: Colors.black),
+                          borderRadius: BorderRadius.circular(50),
                         ),
                         child: TextButton.icon(
                           onPressed: null,

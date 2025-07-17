@@ -19,6 +19,7 @@ abstract class Routes {
   static const LICENSE_APPLICATION = _Paths.LICENSE_APPLICATION;
   static const MAIN_NAVIGATION = _Paths.MAIN_NAVIGATION;
   static const APPLICANT = _Paths.APPLICANT;
+  static const MANAGE_JOB = _Paths.MANAGE_JOB;
 }
 
 abstract class _Paths {
@@ -39,4 +40,5 @@ abstract class _Paths {
   static const LICENSE_APPLICATION = '/license-application';
   static const MAIN_NAVIGATION = '/main-navigation';
   static const APPLICANT = '/applicant';
+  static const MANAGE_JOB = '/manage-job';
 }

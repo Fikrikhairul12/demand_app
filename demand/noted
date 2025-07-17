@@ -14,4 +14,4 @@ lib/
 │
 └── main.dart
 
-buat method untuk tombol submit yang isinya adalah buat koleksi baru namanya payment yang isi field nya adalah userId (current user), jobId, price (harga penawaran), bukti_foto
+buat method untuk tombol submit yang isinya adalah buat koleksi baru namanya payment yang isi field nya adalah userId (current user), jobId, price (harga penawaran), bukti_foto. lalu update koleksi Jobs sesuai job yang sedang diakses, field status menjadi ongoing.

@@ -64,43 +64,39 @@ class PaymentView extends GetView<PaymentController> {
                   ),
                   const SizedBox(height: 8),
                   DropdownButtonFormField<String>(
-                    value: 'QRIS',
+                    value: controller.selectedRekening.value,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                     ),
                     items: const [
-                      DropdownMenuItem(value: 'QRIS', child: Text('QRIS')),
+                      DropdownMenuItem(value: '1650887390', child: Text('BNI')),
+                      DropdownMenuItem(value: '0663260437', child: Text('BCA')),
                     ],
-                    onChanged: (value) {},
+                    onChanged: (value) {
+                      if (value != null) {
+                        controller.selectedRekening.value = value;
+                      }
+                    },
                   ),
                   const SizedBox(height: 20),
-                  Container(
-                    height: 120,
-                    width: double.infinity,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.black, width: 2),
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: const Text(
-                      'ini barcode',
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                    ),
-                  ),
+                  Obx(() => Container(
+                        height: 80,
+                        width: double.infinity,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.black, width: 2),
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Text(
+                          'No. Rekening: ${controller.selectedRekening.value}',
+                          style: const TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold),
+                        ),
+                      )),
                   const SizedBox(height: 16),
                   ElevatedButton.icon(
                     onPressed: () async {
                       await controller.pickImageFromGallery();
-                      if (controller.selectedImage.value != null) {
-                        Get.snackbar(
-                          'Berhasil',
-                          'Foto berhasil dipilih!',
-                          snackPosition: SnackPosition.BOTTOM,
-                          backgroundColor: Colors.green.shade100,
-                          colorText: Colors.black,
-                        );
-                      }
                     },
                     icon: Icon(
                         imageSelected ? Icons.check_circle : Icons.upload_file),
@@ -133,7 +129,11 @@ class PaymentView extends GetView<PaymentController> {
                         child: const Text('Preview'),
                       ),
                       ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () async {
+                          controller.submitPayment(
+                              (applicant['offerPrice'] as num).toInt());
+                          Get.back();
+                        },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.blue,
                           padding: const EdgeInsets.symmetric(

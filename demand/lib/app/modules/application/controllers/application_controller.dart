@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:demand/app/data/models/job_model.dart';
 import 'package:demand/app/data/services/firebase_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -90,18 +89,18 @@ class ApplicationController extends GetxController {
       await _applicationService.updateJobStatus(jobId!, "finished");
 
       // Tambahkan notifikasi
-      final notificationData = {
-        'userId': userId, // Current user ID
-        'title' : "payment",
-        'message':
-            'Pembayaran telah diterima, silahkan cek pada rekening anda!',
-        'type': 'info',
-        'timestamp': Timestamp.now(),
-      };
+      // final notificationData = {
+      //   'userId': userId, // Current user ID
+      //   'title' : "payment",
+      //   'message':
+      //       'Pembayaran telah diterima, silahkan cek pada rekening anda!',
+      //   'type': 'info',
+      //   'timestamp': Timestamp.now(),
+      // };
 
-      await FirebaseFirestore.instance
-          .collection('notifications')
-          .add(notificationData);
+      // await FirebaseFirestore.instance
+      //     .collection('notifications')
+      //     .add(notificationData);
 
       // Tampilkan dialog berhasil
       Get.defaultDialog(

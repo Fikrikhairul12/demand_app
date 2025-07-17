@@ -105,8 +105,6 @@ class MyJobView extends GetView<MyJobController> {
                                                   // output log docId
                                                   Get.toNamed('/applicant',
                                                       arguments: job);
-                                                  print(
-                                                      "Job title: ${job.title}");
                                                 },
                                                 child: const Text(
                                                     "View Applicants"),
@@ -121,8 +119,7 @@ class MyJobView extends GetView<MyJobController> {
                                                   Get.toNamed('/payment',
                                                       arguments: job);
                                                 },
-                                                child: const Text(
-                                                    "Pembayaran"),
+                                                child: const Text("Pembayaran"),
                                               ),
                                             ),
                                           if (job.status == "finished" &&
@@ -140,25 +137,21 @@ class MyJobView extends GetView<MyJobController> {
                                                         controller.jobLinks[
                                                                 job.title] ??
                                                             '';
-                                                    if (link.isNotEmpty) {
-                                                      await Clipboard.setData(
-                                                          ClipboardData(
-                                                              text: link));
-                                                      Get.snackbar("Success",
-                                                          "Link berhasil disalin ke clipboard!",
-                                                          snackPosition:
-                                                              SnackPosition
-                                                                  .BOTTOM);
-                                                    } else {
+                                                    final notes =
+                                                        controller.jobNotes[
+                                                                job.title] ??
+                                                            '';
+                                                    if (link.isEmpty ||
+                                                        notes.isEmpty) {
                                                       Get.snackbar("Error",
-                                                          "Link tidak tersedia!",
-                                                          snackPosition:
-                                                              SnackPosition
-                                                                  .BOTTOM);
+                                                          "Data job belum lengkap!");
+                                                    } else {
+                                                      Get.toNamed('/manage-job',
+                                                          arguments: job);
                                                     }
                                                   },
                                                   child:
-                                                      const Text("Salin Link"),
+                                                      const Text("Manage Job"),
                                                 ),
                                               ],
                                             ),

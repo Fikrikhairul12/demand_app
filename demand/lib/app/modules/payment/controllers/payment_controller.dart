@@ -1,5 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:demand/app/data/models/job_model.dart';
+import 'package:demand/app/data/models/payment_model.dart';
 import 'package:demand/app/data/services/firebase_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -8,6 +11,7 @@ class PaymentController extends GetxController {
   final FirebaseService _firebaseService = FirebaseService();
   var applicants = <Map<String, dynamic>>[].obs;
   var selectedImage = Rx<XFile?>(null);
+  var selectedRekening = '1650887390'.obs;
 
   @override
   void onInit() {
@@ -60,6 +64,35 @@ class PaymentController extends GetxController {
       }
     } catch (e) {
       print("❌ Gagal memilih gambar: $e");
+    }
+  }
+
+  Future<void> submitPayment(int offerPrice) async {
+    print("🔁 Submit payment via service...");
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (user == null) {
+      Get.snackbar('Error', 'User belum login.');
+      return;
+    }
+
+    try {
+      final jobId = await _firebaseService.getJobDocumentId(job.title);
+      if (jobId == null) {
+        Get.snackbar('Error', 'Job ID tidak ditemukan.');
+        return;
+      }
+
+      await _firebaseService.submitPayment(
+        userId: user.uid,
+        jobId: jobId,
+        price: offerPrice,
+      );
+      Get.back();
+      Get.snackbar('Sukses', 'Pembayaran berhasil dikirim.');
+    } catch (e) {
+      Get.snackbar('Error', 'Gagal mengirim pembayaran.');
+      print("❌ Gagal submit payment: $e");
     }
   }
 }

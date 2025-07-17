@@ -3,6 +3,7 @@ import 'package:demand/app/data/models/home_model.dart';
 import 'package:demand/app/data/models/job_model.dart';
 import 'package:demand/app/data/models/license_model.dart';
 import 'package:demand/app/data/models/notification_model.dart';
+import 'package:demand/app/data/models/payment_model.dart';
 import 'package:intl/intl.dart';
 
 class FirebaseService {
@@ -46,6 +47,36 @@ class FirebaseService {
       return null;
     }
   }
+
+  Future<void> submitPayment({
+  required String userId,
+  required String jobId,
+  required int price,
+}) async {
+  try {
+    final payment = Payment(
+      userId: userId,
+      jobId: jobId,
+      price: price,
+    );
+
+    // Simpan ke koleksi 'payment'
+    await FirebaseFirestore.instance
+        .collection('payment')
+        .add(payment.toJson());
+
+    // Update status job jadi 'ongoing'
+    await FirebaseFirestore.instance.collection('jobs').doc(jobId).update({
+      'status': 'ongoing',
+    });
+
+    print("✅ Payment berhasil disimpan dan status job diupdate.");
+  } catch (e) {
+    print("❌ Gagal submit payment: $e");
+    rethrow;
+  }
+}
+
 
   Future<List<Map<String, dynamic>>> fetchApplicationsByJobIdWithDocId(
       String jobId) async {

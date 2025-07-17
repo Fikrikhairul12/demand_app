@@ -14,6 +14,8 @@ import '../modules/login/bindings/login_binding.dart';
 import '../modules/login/views/login_view.dart';
 import '../modules/main_navigation/bindings/main_navigation_binding.dart';
 import '../modules/main_navigation/views/main_navigation_view.dart';
+import '../modules/manage_job/bindings/manage_job_binding.dart';
+import '../modules/manage_job/views/manage_job_view.dart';
 import '../modules/my_job/bindings/my_job_binding.dart';
 import '../modules/my_job/views/my_job_view.dart';
 import '../modules/notification/bindings/notification_binding.dart';
@@ -120,6 +122,11 @@ class AppPages {
       name: _Paths.APPLICANT,
       page: () => const ApplicantView(),
       binding: ApplicantBinding(),
+    ),
+    GetPage(
+      name: _Paths.MANAGE_JOB,
+      page: () => const ManageJobView(),
+      binding: ManageJobBinding(),
     ),
   ];
 }
